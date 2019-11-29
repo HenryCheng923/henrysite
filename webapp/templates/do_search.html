@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<meta charset="utf-8">
+	</head>
+	<body>
+    <div class="container-fluid">
+     <div class="row">
+      <div class="col-8">
+        <h1 class = "text-center">個股每日資訊</h1>
+        <p>目前搜尋共 {{get_db_three_value | length}} 筆資料</p>
+        <h2>搜尋資料：{{st_data}}</h2>
+        <table class= "table table-hover" cellpadding="8" border="1" >
+                    <th class="text-center table-primary">編號</th>
+                    <th class="text-center table-primary">日期</th>
+                    <th class="text-center table-primary">外陸資買賣股數</th>
+                    <th class="text-center table-primary">投信買賣超股數</th>
+                    <th class="text-center table-primary">自營商買賣超股數</th>
+                    <th class="text-center table-primary">三大法人買賣超股數</th>
+        
+        {% for n in get_db_three_value %}
+          <tr>
+            <td class="text-center">{{ forloop.counter }}</td>
+            <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
+            <td class="text-center">{{ n.foreign_overbuysell}} </td> 
+            <td class="text-center">{{ n.trust_overbuysell}} </td>
+            <td class="text-center">{{ n.dealer_overbuysell}} </td>
+            <td class="text-center">{{ n.three_legal_overbuysell}} </td> 
+          </tr>
+        {% endfor %}
+        </table>
+      </div>
+
+      <div class="col-4">
+       另外一邊
+      </div>
+     </div>
+
+
+    </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	</body>
+</html>

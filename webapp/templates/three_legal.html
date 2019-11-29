@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<meta charset="utf-8">
+	</head>
+	<body>
+    <div class="container-fluid">
+     <div class="row">
+      <div class="col-10">
+        <h1>每日三大法人買賣超</h1>
+        <p>目前總共有 {{three_legal | length}} 筆資料</p>
+        <table class= "table table-hover" cellpadding="8" border="1" >
+                    <th class="text-center table-primary">編號</th>
+                    <th class="text-center table-primary">日期</th>
+                    <th class="text-center table-primary">自營商</th>
+                    <th class="text-center table-primary">投信</th>
+                    <th class="text-center table-primary">外資</th>
+                    <th class="text-center table-primary">三大法人買賣超總和</th>
+                    <th class="text-center table-primary">三大法人買賣超差額(億)</th>
+        
+        {% for n in three_legal %}
+          <tr>
+            <td class="text-center">{{ forloop.counter }}</td>
+            <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
+            <td class="text-center">{% widthratio  n.dealer_diff|add:n.dealer_heading_diff 100000000 1%} </td> <!--將數值相加-->
+            <td class="text-center">{% widthratio n.it_diff 100000000 1%}</td>
+                    <td class="text-center">{% widthratio n.foreign_investor_diff|add:n.foreign_investor_dealer_diff 100000000 1%}</td> <!--將數值相加-->
+                    <td class="text-center">{% widthratio n.total_diff 100000000 1%}</td>
+                    <td class="text-center">{% widthratio n.total_diff 100000000 1%}</td>
+          </tr>
+        {% endfor %}
+        </table>
+      </div>
+
+      <div class="col-2">
+       另外一邊
+      </div>
+     </div>
+
+
+    </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	</body>
+</html>

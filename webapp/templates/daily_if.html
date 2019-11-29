@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			a{ text-decoration:none;}
+			a:link {color:#4169e1;} 
+			a:visited {color:#4169e1;}
+			table{ border-collapse: collapse; background-color: #ffdead; }
+		</style>
+	</head>
+	<body>
+		<h1>從Django資料庫抓取資料顯示在網頁上</h1>
+		<p>目前總共有 {{all_sotck_daily_closing | length}} 筆資料</p>
+		<p>測試是否有資料</p>
+		<a href="insert/">新增資料</a>
+		<table cellpadding="8" border="1">
+			<th>編號</th>
+			<th>{{ st_date }}</th>
+			<th>{{ st_stockno }}</th>
+			<th>{{ st_stockname }}</th>
+			<th>{{ transaction_stockamount }}</th>
+			<th></th>
+		
+		{% for n in all_sotck_daily_closing %}
+			{% if n.st_stockno == '2317' %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>{{ n.st_date }}</td>
+					<td>{{ n.st_stockno }}</td>
+					<td>{{ n.st_stockname }}</td>
+					<td>{{ n.transaction_stockamount }}</td>
+					<td>{{ n.transaction_piecesamount }}</td>
+					<td>{{ n.transaction_money }}</td>
+					<td>
+						<a href="detail/{{ n.stockid }}/">詳細資訊</a></br>
+						<a href="update/{{ n.stockid }}/">修改資訊</a></br>
+						<a href="delete/{{ n.stockid }}/">刪除此筆</a></br>
+					</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+		
+		</table>
+	</body>
+</html>

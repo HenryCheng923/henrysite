@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<meta charset="utf-8">
+	</head>
+	<body>
+      <p></p>
+      <fieldset>
+        <legend>請輸入日期:</legend>
+          <span>起始日:</span><input type="date" id="start_date" value="2019-11-29">
+       </fieldset>
+    <br><button type="button" id='btn'>送出!</button>
+
+    <div class="container-fluid">
+     <div class="row">
+      <div class="col-10">
+        <h2 class="text-center">投信投本比資料</h2>
+        <table class= "table table-hover" cellpadding="8" border="1" >
+                    <th class="text-center table-primary">日期</th>
+                    <th class="text-center table-primary">股票</th>
+                    <th class="text-center table-primary">投信投本比</th>
+                    <th class="text-center table-primary">外資投本比</th>
+                    <th class="text-center table-primary">產業類別</th>        
+        {% for n in get_db_trust_shareCapital_ratio %}
+          {% if n.trust_buysell_shareCapital_ratio > 0.1 and n.foreign_buysell_shareCapital_ratio > 0 %}
+            <tr>
+              <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
+              <td class="text-center">{{ n.st_stockname}}</td>
+              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio}} </td> <!--將數值相加-->
+              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio}}</td>
+              <td class="text-center">{{ n.industry_type}}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+        </table>
+
+        <h2 class="text-center">外資投本比資料</h2>
+        <table class= "table table-hover" cellpadding="8" border="1" >
+                    <th class="text-center table-primary">日期</th>
+                    <th class="text-center table-primary">股票</th>
+                    <th class="text-center table-primary">投信投本比</th>
+                    <th class="text-center table-primary">外資投本比</th>
+                    <th class="text-center table-primary">產業類別</th>        
+        {% for n in get_db_foreign_buysell_shareCapital_ratio %}
+          {% if n.trust_buysell_shareCapital_ratio >= 0 and n.foreign_buysell_shareCapital_ratio > 0.2 %}
+            <tr>
+              <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
+              <td class="text-center">{{ n.st_stockname}}</td>
+              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio}} </td> <!--將數值相加-->
+              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio}}</td>
+              <td class="text-center">{{ n.industry_type}}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+        </table>
+      </div>
+
+      <div class="col-2">
+       另外一邊
+      </div>
+     </div>
+
+
+    </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	</body>
+</html>

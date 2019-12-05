@@ -56,7 +56,7 @@ class Three_legal(models.Model):
     foreign_investor_dealer_diff = models.BigIntegerField(db_column='foreign_investor_dealer_diff', blank=True, null=True)  # Field name made lowercase.
     total_buy = models.BigIntegerField(db_column='total_buy', blank=True, null=True)  # Field name made lowercase.
     total_sell = models.BigIntegerField(db_column='total_sell', blank=True, null=True)  # Field name made lowercase.
-    total_diff = models.BigIntegerField(db_column='total_diff')  # Field name made lowercase.
+    total_diff = models.DecimalField(db_column='total_diff', max_digits=5, decimal_places=2, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -107,11 +107,30 @@ class Wespai_p49048(models.Model):
     trust_amount_day = models.BigIntegerField(db_column='trust_amount_day', blank=True, null=True) 
     trust_stock_quantity = models.BigIntegerField(db_column='trust_stock_quantity', blank=True, null=True) 
     trust_stock_totalAmount = models.BigIntegerField(db_column='trust_stock_totalAmount', blank=True, null=True) 
-    trust_buysell_shareCapital_ratio = models.BigIntegerField(db_column='trust_buysell_shareCapital_ratio', blank=True, null=True) 
+    trust_buysell_shareCapital_ratio = models.DecimalField(db_column='trust_buysell_shareCapital_ratio',max_digits=5, decimal_places=2, null=True) 
     foreign_amount_day = models.BigIntegerField(db_column='foreign_amount_day', blank=True, null=True) 
     foreign_stock_quantity = models.BigIntegerField(db_column='foreign_stock_quantity', blank=True, null=True) 
     foreign_stock_totalAmount = models.BigIntegerField(db_column='foreign_stock_totalAmount', blank=True, null=True) 
-    foreign_buysell_shareCapital_ratio = models.BigIntegerField(db_column='foreign_buysell_shareCapital_ratio', blank=True, null=True)  
+    foreign_buysell_shareCapital_ratio = models.DecimalField(db_column='foreign_buysell_shareCapital_ratio', max_digits=5, decimal_places=2, null=True)  
+    
     class Meta:
         managed = False
         db_table = 'wespai_p49048'
+
+
+class All_stock_daily_closing(models.Model):
+    st_date = models.PositiveIntegerField(db_column='st_date', primary_key=True)  
+    st_stockno = models.CharField(db_column='st_stockno', unique=True, max_length=20, blank=True, null=True)  
+    st_stockname = models.CharField(db_column='st_stockname', unique=True, max_length=20, blank=True, null=True)  
+    transaction_stockamount = models.BigIntegerField(db_column='transaction_stockamount', blank=True, null=True)  
+    transaction_piecesamount = models.BigIntegerField(db_column='transaction_piecesamount', blank=True, null=True)  
+    transaction_money = models.BigIntegerField(db_column='transaction_money', blank=True, null=True)  
+    st_open = models.BigIntegerField(db_column='st_open', blank=True, null=True)  
+    st_high = models.BigIntegerField(db_column='st_high', blank=True, null=True)  
+    st_low = models.BigIntegerField(db_column='st_low', blank=True, null=True)  
+    st_close = models.BigIntegerField(db_column='st_close', blank=True, null=True)
+    change_extent = models.BigIntegerField(db_column='change_extent', blank=True, null=True) 
+    
+    class Meta:
+        managed = False
+        db_table = 'all_stock_daily_closing'

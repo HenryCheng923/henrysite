@@ -55,5 +55,4 @@ urlpatterns = [
     #shareCapital_ratio.html
     path('shareCapital_ratio/',views.shareCapital_ratio),
 
-
 ]

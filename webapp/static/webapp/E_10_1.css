@@ -1,0 +1,26 @@
+input[type=text] {
+    width: 30%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid Coral;
+    border-radius: 4px;
+    background-color:BlanchedAlmond;   
+    color: BlueViolet;
+}
+
+button {
+    background-color: DarkSalmon; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+p {
+    display: inline;
+    color: blue;
+}

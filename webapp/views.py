@@ -1,25 +1,36 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-from datetime import datetime
 
 from webapp.models import Company #呼叫webapp資料夾底下的models 的company函數，用來連結資料庫的方法
 from webapp.models import All_sotck_daily_closing 
 from webapp.models import Three_legal
 from webapp.models import Three_legal_overbuysell
-from webapp.models import Wespai_p49048  
+from webapp.models import All_stock_daily_closing
+from webapp.models import Wespai_p49048
+from django.db.models import Count
+from django.db.models import Sum
+
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 
 from django.db.models import Q
+import datetime
 
-from E_14_2 import main as E_14_2_main
+import pymysql
+MYSQL_HOST = 'localhost'
+MYSQL_DB = 'stockdatabase'
+MYSQL_USER = 'root'
+MYSQL_PASS = 'b123456'
+insert_total = 0
+
+today = datetime.datetime.today()
 
 def pylinkweb(request):
 	return HttpResponse("Django讓python能方便連結網頁")
 
 def index(request):
-    now = datetime.now()
+    #now = datetime.now()
     return render(request,'index.html',locals())
 
 #年金計算
@@ -29,7 +40,10 @@ def result(request):
     pv=int(request.GET['amount'])
     i=float(request.GET['rate'])
     n=int(request.GET['period'])
+    #d=int(request.POST['radio'])
     fv=str((pv*((1+i)**n)))
+    
+    #start_date = request.GET['start_date']
     return HttpResponse(fv)
 
 #公司股票資料
@@ -138,19 +152,65 @@ def do_search(request):
     if 'stockno' in request.GET:
         st_data = request.GET['stockno']
         get_db_three_value = Three_legal_overbuysell.objects.filter(Q(st_stockno__exact = st_data) |  Q(st_stockname__contains = st_data)).order_by("-st_date")
-        
-        #getvalue = Three_legal_overbuysell.objects.all().order_by("st_date")[:10]
         return render(request,'do_search.html', locals())
     else:
         return redirect("/three_legal_overbuysell/")
     #stocknovalue = request.GET.get('st_stockno')
     #stocknovalue = request.GET['st_stockno']
 
+
+def connect_mysql():  #連線資料庫
+    global connect, cursor
+    connect = pymysql.connect(host = MYSQL_HOST, db = MYSQL_DB, user = MYSQL_USER, password = MYSQL_PASS,
+            charset = 'utf8', use_unicode = True)
+    cursor = connect.cursor()
+
 #投本比資料
 def shareCapital_ratio(request):
-    date = 20191128
-    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  trust_stock_totalAmount__gt = 5000000, st_volume__gt = 1000) 
-    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  foreign_stock_totalAmount__gt = 500000000, st_volume__gt = 1000)
-    #SELECT * FROM stockdatabase.wespai_p49048 where trust_buysell_shareCapital_ratio > 0.1 and foreign_buysell_shareCapital_ratio > 0 and st_stockprice > 30 and trust_stock_totalAmount > 5000000 and st_volume >1000;
-    #trust_buysell_shareCapital_ratio__range = [1, 3] , foreign_buysell_shareCapital_ratio__gt = 0.1,
+    if 'start_date' in request.GET:
+        date = request.GET.get('start_date')  # today.strftime("%Y%m%d")
+        date_time = datetime.datetime.strptime(date,'%Y-%m-%d')
+        date = date_time.strftime('%Y%m%d')
+    else:
+        date = today.strftime("%Y%m%d")
+
+    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  trust_stock_totalAmount__gt = 5000000, st_volume__gt = 1000, trust_buysell_shareCapital_ratio__gt = 0.1 ,foreign_buysell_shareCapital_ratio__gt = 0)\
+                                                            .order_by("-trust_buysell_shareCapital_ratio")
+    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  foreign_stock_totalAmount__gt = 500000000, st_volume__gt = 1000, foreign_buysell_shareCapital_ratio__gt = 0.2, trust_buysell_shareCapital_ratio__gt = 0)\
+                                                                        .order_by("-foreign_buysell_shareCapital_ratio")
+    from django.db.models.functions import Cast
+    from django.db.models import FloatField
+    connect_mysql()
+    three_date = "select st_date from stockdatabase.wespai_p49048  where st_stockno ='1101' order by st_date desc limit 0,3"
+    cursor = connect.cursor()
+    cursor.execute(three_date)  #執行查詢的SQL
+    
+    three_date_result = cursor.fetchall()  #如果有取出第一筆資料
+    three_date_result = str(three_date_result[2][0].strftime("%Y%m%d")) #將日期轉換成YYYYMMDD
+    print(three_date_result)
+    get_db_trust_shareCapital_count = Wespai_p49048.objects.filter(st_date__range=[three_date_result, date],  st_stockprice__gt = 30,  foreign_stock_totalAmount__gt = 500000000, st_volume__gt = 1000)\
+                                                            .values('st_stockno','st_stockname','industry_type')\
+                                                            .annotate(trust_buysell_shareCapital_ratio = Cast(Sum('trust_buysell_shareCapital_ratio'), FloatField()))\
+                                                            .order_by("-trust_buysell_shareCapital_ratio")
+
+    '''
+    from itertools import chain
+    all_result = list(chain(get_db_trust_shareCapital_ratio, get_db_trust_shareCapital_count))
+    print(get_db_trust_shareCapital_ratio)
+    print(get_db_trust_shareCapital_count)
+    print(type(all_result))
+    '''
+    #.annotate(trust_buysell_shareCapital_ratio = Cast(Sum('trust_buysell_shareCapital_ratio'), FloatField()))\
+
+    #print(get_db_trust_shareCapital_count.values('st_stockname','trust_buysell_shareCapital_ratio'))                                                                                                                 
+    #print(get_db_trust_shareCapital_count.st_stockno_count)
+    '''
+    #Transaction.objects.all().values('actor').annotate(total=Count('actor')).order_by('total')
+    #c = Wespai_p49048.objects.annotate(Count(date))
+    #
+    '''
+    
+  
+    
+    #撈出近三日的所有資料，計算相同股票出現的投本比，然後用投本比由大至小排列
     return render_to_response('shareCapital_ratio.html', locals())

@@ -74,6 +74,7 @@ WSGI_APPLICATION = 'henrysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #資料庫引擎
@@ -81,6 +82,18 @@ DATABASES = {
         'USER':'root', #用戶名稱
         'PASSWORD':'b123456', #連線密碼
         'HOST':"localhost", #資料庫主機 默認為localhost
+        'PORT':'3306', #資料庫端口，MySql默認3306
+    }
+}
+
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', #資料庫引擎
+        'NAME': 'heroku_42da24076bdc9b4', #資料庫名稱
+        'USER':'baf8c2c2ccd58f', #用戶名稱
+        'PASSWORD':'5a049b04', #連線密碼
+        'HOST':"us-cdbr-iron-east-05.cleardb.net", #資料庫主機 默認為localhost
         'PORT':'3306', #資料庫端口，MySql默認3306
     }
 }

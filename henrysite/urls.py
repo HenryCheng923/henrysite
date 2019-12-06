@@ -55,4 +55,7 @@ urlpatterns = [
     #shareCapital_ratio.html
     path('shareCapital_ratio/',views.shareCapital_ratio),
 
+    #call_warrant.html
+    path('call_warrant/',views.call_warrant),
+
 ]

@@ -8,6 +8,7 @@ from webapp.models import Three_legal
 from webapp.models import Three_legal_overbuysell
 from webapp.models import All_stock_daily_closing
 from webapp.models import Wespai_p49048
+from webapp.models import Call_warrant
 from django.db.models import Count
 from django.db.models import Sum
 
@@ -15,6 +16,8 @@ from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 
 from django.db.models import Q
+from django.db.models.functions import Cast
+from django.db.models import FloatField
 import datetime
 
 import pymysql
@@ -178,8 +181,7 @@ def shareCapital_ratio(request):
                                                             .order_by("-trust_buysell_shareCapital_ratio")
     get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  foreign_stock_totalAmount__gt = 500000000, st_volume__gt = 1000, foreign_buysell_shareCapital_ratio__gt = 0.2, trust_buysell_shareCapital_ratio__gt = 0)\
                                                                         .order_by("-foreign_buysell_shareCapital_ratio")
-    from django.db.models.functions import Cast
-    from django.db.models import FloatField
+
     connect_mysql()
     three_date = "select st_date from stockdatabase.wespai_p49048  where st_stockno ='1101' order by st_date desc limit 0,3"
     cursor = connect.cursor()
@@ -214,3 +216,23 @@ def shareCapital_ratio(request):
     
     #撈出近三日的所有資料，計算相同股票出現的投本比，然後用投本比由大至小排列
     return render_to_response('shareCapital_ratio.html', locals())
+
+
+
+#認購權證總成交金額
+def call_warrant(request):
+    call_warrant_result = []
+    if 'start_date' in request.GET:
+        date = request.GET.get('start_date')  # today.strftime("%Y%m%d")
+        date_time = datetime.datetime.strptime(date,'%Y-%m-%d')
+        date = date_time.strftime('%Y%m%d')
+    else:
+        date = today.strftime("%Y%m%d")
+    
+    connect_mysql()
+    db_data = "select st_date,  st_stockname, st_close, sum(st_amount_call_warrant) as st_sum from stockdatabase.call_warrant where st_date = '%s' group by st_stockname having st_sum > 0 order by st_sum desc limit 0,20" % (date)
+    cursor = connect.cursor()
+    cursor.execute(db_data)  #執行查詢的SQL
+    call_warrant_result = cursor.fetchall()  #如果有取出第一筆資料                                    
+            
+    return render_to_response('call_warrant.html', locals())

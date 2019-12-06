@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    {% load static %}
+  <script src="{% static "/webapp/js_date.js" %}"></script>
+</head>
+
+<body>
+  <h1 class = "text-center">認購權證篩選股</h1>
+		<form action="../call_warrant/" method="get">
+			<table>
+				<tr>
+					<h3>請輸入日期:</h3><input type="date" id="start_date" name= "start_date" value = "2019-12-03" min="2019-11-28"><spar>
+          <input class="btn btn-success" type="submit" value="查詢"><spar>
+          <a class="btn btn-info" href="../" role="button">回上頁</a>
+        </tr>
+			</table>
+		</form><br> 
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-6">   
+
+        <div class = "trust_shareCapital_count">
+          <table class="table table-hover" cellpadding="8" border="1">
+            <th class="text-center table-primary">日期</th>
+            <th class="text-center table-primary">股票名稱</th>
+            <th class="text-center table-primary">收盤價</th>
+            <th class="text-center table-primary">認購權證總成交金額</th>
+            {% for n in call_warrant_result %}<tr>
+              <td class="text-center">{{ n.0 | date:'Y-m-d'}}</td>
+              <td class="text-center">{{ n.1 }}</td>
+              <td class="text-center">{{ n.2 }}</td>
+              <td class="text-center">{{ n.3 }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div><br>
+
+
+      
+
+      <div class="col-6">另外一邊</div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

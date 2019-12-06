@@ -134,3 +134,20 @@ class All_stock_daily_closing(models.Model):
     class Meta:
         managed = False
         db_table = 'all_stock_daily_closing'
+
+
+class Call_warrant(models.Model):
+    st_date = models.PositiveIntegerField(db_column='st_date', primary_key=True)  
+    st_stockno_call_warrant = models.CharField(db_column='st_stockno_call_warrant', unique=True, max_length=20, blank=True, null=True)  
+    st_stockname_call_warrant = models.CharField(db_column='st_stockname_call_warrant', unique=True, max_length=20, blank=True, null=True)  
+    st_numberOfShares_call_warrant = models.BigIntegerField(db_column='st_numberOfShares_call_warrant', blank=True, null=True)  
+    st_count_call_warrant = models.BigIntegerField(db_column='st_count_call_warrant', blank=True, null=True)  
+    st_amount_call_warrant = models.BigIntegerField(db_column='st_amount_call_warrant', blank=True, null=True)  
+    st_close_call_warrant = models.DecimalField(db_column='st_close_call_warrant', max_digits=5, decimal_places=2, null=True)   
+    st_stockno = models.CharField(db_column='st_stockno', unique=True, max_length=20, blank=True, null=True)  
+    st_stockname = models.CharField(db_column='st_stockname', unique=True, max_length=20, blank=True, null=True)  
+    st_close = models.DecimalField(db_column='st_close', max_digits=5, decimal_places=2, null=True)   
+    
+    class Meta:
+        managed = False
+        db_table = 'call_warrant'

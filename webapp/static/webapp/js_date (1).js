@@ -1,1 +1,0 @@
-var dt_to = $.datepicker.formatDate('yy-mm-dd', new Date());

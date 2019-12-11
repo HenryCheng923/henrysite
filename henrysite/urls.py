@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('gogo/', views.pylinkweb), #呼叫gogo路徑底下 views資料夾的pylinkweb函數
     
+    path('test/', views.test),
     #年金計算
     path('fv/', views.fv),
     path('result/', views.result),
@@ -58,4 +59,8 @@ urlpatterns = [
     #call_warrant.html
     path('call_warrant/',views.call_warrant),
 
+    path('foreign_buy_shareCapital_ratio/', views.foreign_buy_shareCapital_ratio),
+    path('foreign_sell_shareCapital_ratio/', views.foreign_sell_shareCapital_ratio),
+    path('trust_buy_shareCapital_ratio/', views.trust_buy_shareCapital_ratio),
+    path('trust_sell_shareCapital_ratio/', views.trust_sell_shareCapital_ratio),
 ]

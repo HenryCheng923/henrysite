@@ -17,7 +17,7 @@
 		<form action="../shareCapital_ratio/" method="get">
 			<table>
 				<tr>
-					<h3>請輸入要查詢投本比的日期:</h3><input type="date" id="start_date" name= "start_date" value = "2019-12-03" min="2019-11-28"><spar>
+					<h3>請輸入要查詢投本比的日期:</h3><input type="date" id="start_date" name= "start_date" value = "2019-12-06" min="2019-11-28"><spar>
           <input class="btn btn-success" type="submit" value="查詢"><spar>
           <a class="btn btn-info" href="../" role="button">回上頁</a>
         </tr>
@@ -26,7 +26,7 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-10">   
+      <div class="col-sm-10">   
        <div class = "shareCapital_count">
         <table class="table table-hover" cellpadding="8" border="1">
           <th class="text-center table-primary">日期</th>
@@ -54,17 +54,19 @@
             <th class="text-center table-primary">代碼</th>
             <th class="text-center table-primary">股票</th>
             <th class="text-center table-primary">股價</th>
-            <th class="text-center table-primary">投信投本比</th>
-            <th class="text-center table-primary">外資投本比</th>
+            <th class="text-center table-primary">投信比</th>
+            <th class="text-center table-primary">外資比</th>
+            <th class="text-center table-primary">自營商比</th>
             <th class="text-center table-primary">產業類別</th>
             {% for n in get_db_trust_shareCapital_ratio %}<tr>
               <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
               <td class="text-center">{{ n.st_stockno}}</td>
               <td class="text-center">{{ n.st_stockname}}</td>
               <td class="text-center">{{ n.st_stockprice}}</td>
-              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio}} </td>
+              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio | floatformat:2 }} </td>
               <!--將數值相加-->
-              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio}}</td>
+              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio | floatformat:2 }}</td>
+              <td class="text-center">{{ n.dealer_buysell_shareCapital_ratio | floatformat:2 }}</td>
               <td class="text-center">{{ n.industry_type}}</td>
             </tr>
             {% endfor %}
@@ -73,26 +75,46 @@
 
         <div class = "foreign_shareCapital_count">
           <table class="table table-hover" cellpadding="8" border="1">
-            <td colspan="7" class="text-center table-primary">外資買超股本比</td>
+            <td colspan="8" class="text-center table-primary">外資買超股本比</td>
             {% for n in get_db_foreign_buysell_shareCapital_ratio %}
             <tr>
               <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
               <td class="text-center">{{ n.st_stockno}}</td>
               <td class="text-center">{{ n.st_stockname}}</td>
               <td class="text-center">{{ n.st_stockprice}}</td>
-              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio}} </td>
+              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio | floatformat:2 }} </td>
               <!--將數值相加-->
-              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio}}</td>
+              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio | floatformat:2 }}</td>
+              <td class="text-center">{{ n.dealer_buysell_shareCapital_ratio | floatformat:2 }}</td>
+              <td class="text-center">{{ n.industry_type}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+
+
+      <div class = "foreign_shareCapital_count">
+          <table class="table table-hover" cellpadding="8" border="1">
+            <td colspan="8" class="text-center table-primary">自營商買超股本比</td>
+            {% for n in dealer_buysell_shareCapital_ratio %}
+            <tr>
+              <td class="text-center">{{ n.st_date | date:'Y-m-d'}}</td>
+              <td class="text-center">{{ n.st_stockno}}</td>
+              <td class="text-center">{{ n.st_stockname}}</td>
+              <td class="text-center">{{ n.st_stockprice}}</td>
+              <td class="text-center">{{ n.trust_buysell_shareCapital_ratio | floatformat:2 }} </td>
+              <!--將數值相加-->
+              <td class="text-center">{{ n.foreign_buysell_shareCapital_ratio | floatformat:2 }}</td>
+              <td class="text-center">{{ n.dealer_buysell_shareCapital_ratio | floatformat:2 }}</td>
               <td class="text-center">{{ n.industry_type}}</td>
             </tr>
             {% endfor %}
           </table>
         </div>
       </div>
-        
-      
 
-      <div class="col-2">另外一邊</div>
+      <div class="col-sm-2">另外一邊</div>
     </div>
   </div>
 

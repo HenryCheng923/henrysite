@@ -18,6 +18,9 @@ from django.shortcuts import redirect
 from django.db.models import Q
 from django.db.models.functions import Cast
 from django.db.models import FloatField
+
+
+import json
 import datetime
 
 import pymysql
@@ -35,6 +38,9 @@ def pylinkweb(request):
 def index(request):
     #now = datetime.now()
     return render(request,'index.html',locals())
+
+def test(request):
+    return render(request,'test.html',{})
 
 #年金計算
 def fv(request):
@@ -181,7 +187,10 @@ def shareCapital_ratio(request):
                                                             .order_by("-trust_buysell_shareCapital_ratio")
     get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  foreign_stock_totalAmount__gt = 500000000, st_volume__gt = 1000, foreign_buysell_shareCapital_ratio__gt = 0.2, trust_buysell_shareCapital_ratio__gt = 0)\
                                                                         .order_by("-foreign_buysell_shareCapital_ratio")
-
+    
+    dealer_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = date,  st_stockprice__gt = 30,  dealer_stock_totalAmount__gt = 500000000, st_volume__gt = 1000, dealer_buysell_shareCapital_ratio__gt = 0.1, trust_buysell_shareCapital_ratio__gt = 0, foreign_buysell_shareCapital_ratio__gt = 0)\
+                                                                        .order_by("-dealer_buysell_shareCapital_ratio")                                                                    
+    #計算三日總和
     connect_mysql()
     three_date = "select st_date from stockdatabase.wespai_p49048  where st_stockno ='1101' order by st_date desc limit 0,3"
     cursor = connect.cursor()
@@ -230,9 +239,172 @@ def call_warrant(request):
         date = today.strftime("%Y%m%d")
     
     connect_mysql()
-    db_data = "select st_date,  st_stockname, st_close, sum(st_amount_call_warrant) as st_sum from stockdatabase.call_warrant where st_date = '%s' group by st_stockname having st_sum > 0 order by st_sum desc limit 0,20" % (date)
+    db_data = "select st_date,  st_stockname, st_close, sum(st_amount_call_warrant) as st_sum from stockdatabase.call_warrant where st_date = '%s' group by st_stockname having st_sum > 0 order by st_sum desc limit 0,30" % (date)
     cursor = connect.cursor()
     cursor.execute(db_data)  #執行查詢的SQL
-    call_warrant_result = cursor.fetchall()  #如果有取出第一筆資料                                    
+    call_warrant_result = cursor.fetchall()  #如果有取出第一筆資料
+
+
+    #計算三日總和
+
+    connect_mysql()
+    three_date = "select st_date from stockdatabase.call_warrant  where st_stockno_call_warrant ='034088' order by st_date desc limit 0,3"
+    cursor = connect.cursor()
+    cursor.execute(three_date)  #執行查詢的SQL
+    
+    three_date_result = cursor.fetchall()  #如果有取出第一筆資料
+    three_date_result = str(three_date_result[2][0].strftime("%Y%m%d")) #將日期轉換成YYYYMMDD
+    print(three_date_result)
+
+    get_db_call_warrant_count = Call_warrant.objects.filter(st_date__range=[three_date_result, date])\
+                                                        .values('st_stockno','st_stockname')\
+                                                        .annotate(st_amount_call_warrant = Sum('st_amount_call_warrant'))\
+                                                        .order_by("-st_amount_call_warrant")                                    
             
     return render_to_response('call_warrant.html', locals())
+
+
+
+
+#外資比買超資料頁面
+def foreign_buy_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        foreign_stock_totalAmount = request.POST.get('foreign_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        foreign_stock_totalAmount = 5000000
+        change_extent = 0.03
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = 0.2
+
+    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gt = stock_price,  foreign_stock_totalAmount__gt = foreign_stock_totalAmount, st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__gte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__gt = trust_shareCapital_ratio)\
+                                                                        .order_by("-foreign_buysell_shareCapital_ratio")
+
+    return render_to_response('foreign_buy_shareCapital_ratio.html', locals())
+
+
+#外資比賣超資料頁面
+def foreign_sell_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        foreign_stock_totalAmount = request.POST.get('foreign_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        foreign_stock_totalAmount = 5000000
+        change_extent = 0.03
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = -0.2
+
+    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gt = stock_price,  foreign_stock_totalAmount__gte = foreign_stock_totalAmount, st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__lte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__lt = trust_shareCapital_ratio)\
+                                                                        .order_by("foreign_buysell_shareCapital_ratio")
+
+    return render_to_response('foreign_sell_shareCapital_ratio.html', locals())
+
+
+#投信比買超資料頁面
+def trust_buy_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        trust_stock_totalAmount = request.POST.get('trust_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        trust_stock_totalAmount = 5000000
+        change_extent = 0.03
+        st_volume = 1000
+        trust_shareCapital_ratio = 0.1
+        foreign_shareCapital_ratio = 0
+
+    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__gte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__gt = foreign_shareCapital_ratio)\
+                                                            .order_by("-trust_buysell_shareCapital_ratio")
+
+    return render_to_response('trust_buy_shareCapital_ratio.html', locals())
+
+
+#投信比賣超資料頁面
+def trust_sell_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        trust_stock_totalAmount = request.POST.get('trust_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        trust_stock_totalAmount = 5000000
+        change_extent = 0.03
+        st_volume = 1000
+        trust_shareCapital_ratio = -0.1
+        foreign_shareCapital_ratio = 0
+
+    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__lte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__lt = foreign_shareCapital_ratio)\
+                                                            .order_by("trust_buysell_shareCapital_ratio")
+
+    return render_to_response('trust_sell_shareCapital_ratio.html', locals())

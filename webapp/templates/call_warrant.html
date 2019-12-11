@@ -21,6 +21,27 @@
         </tr>
 			</table>
 		</form><br> 
+
+   <div class="container-fluid">
+    <div class="row">
+      <div class="col-10">   
+       <div class = "shareCapital_count">
+        <table class="table table-hover" cellpadding="8" border="1">
+          <th class="text-center table-primary">代碼</th>
+          <th class="text-center table-primary">名稱</th>
+          <th class="text-center table-primary">近三日累計買超總額</th>
+          {% for n in get_db_call_warrant_count %}
+          <tr>
+            <td class="text-center">{{ n.st_stockno}}</td>
+            <td class="text-center">{{ n.st_stockname}}</td>
+            <td class="text-center">{{ n.st_amount_call_warrant}}</td>
+          </tr>
+          {% endfor %}
+          </table>
+        </div><br>
+
+
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-6">   

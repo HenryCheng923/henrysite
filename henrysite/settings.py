@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '%bzl6ne)e&uuc67uw*c8%nfj#x891e^$lle-u4n7$bae%s11ep'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'henrysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #資料庫引擎
@@ -97,7 +97,7 @@ DATABASES = {
         'PORT':'3306', #資料庫端口，MySql默認3306
     }
 }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

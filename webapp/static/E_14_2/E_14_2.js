@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	$("#btn_insert").click(function(){
 		document.getElementById("result").innerHTML = '抓取中.... 若期間過長，請稍後1分鐘!';
-		var stock_id = $("#insert_stock").val();
+		var stock_price = $("#stock_price").val();
 		var start_date = $("#start_date").val();
 		var end_date = $("#end_date").val();
 

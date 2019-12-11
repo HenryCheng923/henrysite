@@ -96,13 +96,15 @@ class Wespai_p49048(models.Model):
     st_stockprice = models.BigIntegerField(db_column='st_stockprice', blank=True, null=True)  
     director_shareholding = models.BigIntegerField(db_column='director_shareholding', blank=True, null=True)  
     foreign_shareholding = models.BigIntegerField(db_column='foreign_shareholding', blank=True, null=True)  
-    trust_shareholding = models.BigIntegerField(db_column='trust_shareholding', blank=True, null=True)  
+    trust_shareholding = models.BigIntegerField(db_column='trust_shareholding', blank=True, null=True)
+    dealer_shareholding = models.BigIntegerField(db_column='dealer_shareholding', blank=True, null=True)  
     st_volume = models.BigIntegerField(db_column='st_volume', blank=True, null=True)  
     st_three_buysell = models.BigIntegerField(db_column='st_three_buysell', blank=True, null=True)  
     issued_number = models.BigIntegerField(db_column='issued_number', blank=True, null=True)  
     amount_of_capital = models.BigIntegerField(db_column='amount_of_capital', blank=True, null=True)
     trust_buysell = models.BigIntegerField(db_column='trust_buysell', blank=True, null=True) 
-    foreign_buysell = models.BigIntegerField(db_column='foreign_buysell', blank=True, null=True) 
+    foreign_buysell = models.BigIntegerField(db_column='foreign_buysell', blank=True, null=True)
+    dealer_buysell = models.BigIntegerField(db_column='dealer_buysell', blank=True, null=True)  
     industry_type = models.CharField(db_column='industry_type', unique=True, max_length=20, blank=True, null=True)
     trust_amount_day = models.BigIntegerField(db_column='trust_amount_day', blank=True, null=True) 
     trust_stock_quantity = models.BigIntegerField(db_column='trust_stock_quantity', blank=True, null=True) 
@@ -112,6 +114,10 @@ class Wespai_p49048(models.Model):
     foreign_stock_quantity = models.BigIntegerField(db_column='foreign_stock_quantity', blank=True, null=True) 
     foreign_stock_totalAmount = models.BigIntegerField(db_column='foreign_stock_totalAmount', blank=True, null=True) 
     foreign_buysell_shareCapital_ratio = models.DecimalField(db_column='foreign_buysell_shareCapital_ratio', max_digits=5, decimal_places=2, null=True)  
+    dealer_amount_day = models.BigIntegerField(db_column='dealer_amount_day', blank=True, null=True) 
+    dealer_stock_quantity = models.BigIntegerField(db_column='dealer_stock_quantity', blank=True, null=True) 
+    dealer_stock_totalAmount = models.BigIntegerField(db_column='dealer_stock_totalAmount', blank=True, null=True) 
+    dealer_buysell_shareCapital_ratio = models.DecimalField(db_column='dealer_buysell_shareCapital_ratio', max_digits=5, decimal_places=2, null=True)  
     
     class Meta:
         managed = False

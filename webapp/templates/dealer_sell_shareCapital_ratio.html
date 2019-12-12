@@ -75,9 +75,9 @@
         <div class="col-3"></div>
 
         <div class="col-8">
-          <form action="../trust_sell_shareCapital_ratio/" method="post" id="result" name = "result">
+          <form action="../dealer_sell_shareCapital_ratio/" method="post" id="result" name = "result">
             <div>
-              <p class="h3 col-md-8 text-center">投信賣超比篩選條件</p>
+              <p class="h3 col-md-8 text-center">自營商賣超比篩選條件</p>
               <div class="form-group row">
                 <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
                 <div class="col-lg-4">
@@ -102,7 +102,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabel" class="col-lg-4 col-form-label">外資庫存總金額：</label>
+                <label for="colFormLabel" class="col-lg-4 col-form-label">自營商庫存總金額：</label>
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="trust_stock_totalAmount"
                     name="trust_stock_totalAmount"  value="5000000" required>
@@ -126,7 +126,7 @@
                 <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投信賣超股本比：</label>
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="trust_shareCapital_ratio"
-                    name="trust_shareCapital_ratio"  value="-0.1" required>
+                    name="trust_shareCapital_ratio"  value="0" required>
                 </div>
               </div>
               <div class="form-group row">
@@ -134,6 +134,13 @@
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="foreign_shareCapital_ratio"
                     name="foreign_shareCapital_ratio"  value="0" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自營商賣超股本比：</label>
+                <div class="col-lg-4">
+                  <input type="text" class="form-control text-right" id="dealer_shareCapital_ratio"
+                    name="dealer_shareCapital_ratio"  value="-0.1" required>
                 </div>
               </div>
               <div class="form-group row">
@@ -151,10 +158,10 @@
 
     <div class="row">
       <div class="col-sm">
-        <h3 id = "trust_radio_result">投信賣超比篩選結果</h3>
+        <h3 id = "trust_radio_result">自營商買超比篩選結果</h3>
         <table class="table table-striped table-responsive-md">
           <thead>
-            <tr class="table-success">
+            <tr class="table-warning">
               <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
               <th scope="col" class="text-center align-middle" style="width:120px;">日期</th>
               <th scope="col" class="text-center align-middle" style="width:100px;">股票代碼</th>
@@ -167,10 +174,11 @@
               <th scope="col" class="text-center align-middle" style="width:60px;">投信持股</th>
               <th scope="col" class="text-center align-middle" style="width:70px;">外資比</th>
               <th scope="col" class="text-center align-middle" style="width:70px;">投信比</th>
+              <th scope="col" class="text-center align-middle" style="width:70px;">自營比</th>
             </tr>
           </thead>
           <tbody>
-          {% for n in get_db_trust_shareCapital_ratio %}
+          {% for n in get_db_dealer_sell_shareCapital_ratio %}
             <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
               <td class="text-center align-middle">{{ n.st_date | date:'Y-m-d'}}</td>
@@ -184,6 +192,7 @@
               <td class="text-center align-middle">{{ n.trust_shareholding}}</td>
               <td class="text-center align-middle">{{ n.foreign_buysell_shareCapital_ratio}}</td>
               <td class="text-center align-middle">{{ n.trust_buysell_shareCapital_ratio}}</td>
+              <td class="text-center align-middle">{{ n.dealer_buysell_shareCapital_ratio}}</td>
             </tr>
           {% endfor %}
           </tbody>

@@ -118,6 +118,7 @@ class Wespai_p49048(models.Model):
     dealer_stock_quantity = models.BigIntegerField(db_column='dealer_stock_quantity', blank=True, null=True) 
     dealer_stock_totalAmount = models.BigIntegerField(db_column='dealer_stock_totalAmount', blank=True, null=True) 
     dealer_buysell_shareCapital_ratio = models.DecimalField(db_column='dealer_buysell_shareCapital_ratio', max_digits=5, decimal_places=2, null=True)  
+    change_extent = models.DecimalField(db_column='change_extent', max_digits=5, decimal_places=2, null=True)  
     
     class Meta:
         managed = False

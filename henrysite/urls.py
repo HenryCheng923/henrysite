@@ -63,4 +63,6 @@ urlpatterns = [
     path('foreign_sell_shareCapital_ratio/', views.foreign_sell_shareCapital_ratio),
     path('trust_buy_shareCapital_ratio/', views.trust_buy_shareCapital_ratio),
     path('trust_sell_shareCapital_ratio/', views.trust_sell_shareCapital_ratio),
+    path('dealer_buy_shareCapital_ratio/', views.dealer_buy_shareCapital_ratio),
+    path('dealer_sell_shareCapital_ratio/', views.dealer_sell_shareCapital_ratio),
 ]

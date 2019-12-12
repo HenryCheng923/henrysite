@@ -291,12 +291,12 @@ def foreign_buy_shareCapital_ratio(request):
         #finish_date = 20191210
         stock_price = 30
         foreign_stock_totalAmount = 5000000
-        change_extent = 0.03
+        change_extent = 3
         st_volume = 1000
         trust_shareCapital_ratio = 0
         foreign_shareCapital_ratio = 0.2
 
-    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gt = stock_price,  foreign_stock_totalAmount__gt = foreign_stock_totalAmount, st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__gte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__gt = trust_shareCapital_ratio)\
+    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  foreign_stock_totalAmount__gte = foreign_stock_totalAmount, change_extent__lte = change_extent , st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__gte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__gt = trust_shareCapital_ratio)\
                                                                         .order_by("-foreign_buysell_shareCapital_ratio")
 
     return render_to_response('foreign_buy_shareCapital_ratio.html', locals())
@@ -327,12 +327,12 @@ def foreign_sell_shareCapital_ratio(request):
         #finish_date = 20191210
         stock_price = 30
         foreign_stock_totalAmount = 5000000
-        change_extent = 0.03
+        change_extent = -3
         st_volume = 1000
         trust_shareCapital_ratio = 0
         foreign_shareCapital_ratio = -0.2
 
-    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gt = stock_price,  foreign_stock_totalAmount__gte = foreign_stock_totalAmount, st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__lte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__lt = trust_shareCapital_ratio)\
+    get_db_foreign_buysell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  foreign_stock_totalAmount__gte = foreign_stock_totalAmount, change_extent__gte = change_extent ,st_volume__gte = st_volume, foreign_buysell_shareCapital_ratio__lte = foreign_shareCapital_ratio, trust_buysell_shareCapital_ratio__lt = trust_shareCapital_ratio)\
                                                                         .order_by("foreign_buysell_shareCapital_ratio")
 
     return render_to_response('foreign_sell_shareCapital_ratio.html', locals())
@@ -363,12 +363,12 @@ def trust_buy_shareCapital_ratio(request):
         #finish_date = 20191210
         stock_price = 30
         trust_stock_totalAmount = 5000000
-        change_extent = 0.03
+        change_extent = 3
         st_volume = 1000
         trust_shareCapital_ratio = 0.1
         foreign_shareCapital_ratio = 0
 
-    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__gte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__gt = foreign_shareCapital_ratio)\
+    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, change_extent__lte = change_extent, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__gte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__gt = foreign_shareCapital_ratio)\
                                                             .order_by("-trust_buysell_shareCapital_ratio")
 
     return render_to_response('trust_buy_shareCapital_ratio.html', locals())
@@ -399,12 +399,90 @@ def trust_sell_shareCapital_ratio(request):
         #finish_date = 20191210
         stock_price = 30
         trust_stock_totalAmount = 5000000
-        change_extent = 0.03
+        change_extent = -3
         st_volume = 1000
         trust_shareCapital_ratio = -0.1
         foreign_shareCapital_ratio = 0
 
-    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__lte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__lt = foreign_shareCapital_ratio)\
+    get_db_trust_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  trust_stock_totalAmount__gte = trust_stock_totalAmount, change_extent__gte = change_extent, st_volume__gte = st_volume, trust_buysell_shareCapital_ratio__lte = trust_shareCapital_ratio ,foreign_buysell_shareCapital_ratio__lt = foreign_shareCapital_ratio)\
                                                             .order_by("trust_buysell_shareCapital_ratio")
 
     return render_to_response('trust_sell_shareCapital_ratio.html', locals())
+
+#自營比買超資料頁面
+def dealer_buy_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        trust_stock_totalAmount = request.POST.get('trust_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+        dealer_shareCapital_ratio = request.POST.get('dealer_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        trust_stock_totalAmount = 5000000
+        change_extent = 3
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = 0
+        dealer_shareCapital_ratio = 0.1
+
+    get_db_dealer_buy_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  dealer_stock_totalAmount__gt = trust_stock_totalAmount, change_extent__lte = change_extent, st_volume__gte = st_volume,  trust_buysell_shareCapital_ratio__gte = trust_shareCapital_ratio, foreign_buysell_shareCapital_ratio__gte = foreign_shareCapital_ratio, dealer_buysell_shareCapital_ratio__gte = dealer_shareCapital_ratio)\
+                                                               .order_by("-dealer_buysell_shareCapital_ratio")                                                                    
+   
+
+    return render_to_response('dealer_buy_shareCapital_ratio.html', locals())
+
+
+
+#自營比賣超資料頁面
+def dealer_sell_shareCapital_ratio(request):
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        '''這是終止日期
+        finish_date = request.POST.get('finish_date')
+        date_time = datetime.datetime.strptime(finish_date,'%Y-%m-%d')
+        finish_date = date_time.strftime('%Y%m%d')
+        '''
+
+        stock_price = request.POST.get('stock_price')
+        trust_stock_totalAmount = request.POST.get('trust_stock_totalAmount')
+        change_extent = request.POST.get('change_extent')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+        dealer_shareCapital_ratio = request.POST.get('dealer_shareCapital_ratio')
+    else:
+        start_date = date
+        #finish_date = 20191210
+        stock_price = 30
+        trust_stock_totalAmount = 5000000
+        change_extent = 3
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = 0
+        dealer_shareCapital_ratio = -0.1
+
+    get_db_dealer_sell_shareCapital_ratio = Wespai_p49048.objects.filter(st_date = start_date,  st_stockprice__gte = stock_price,  dealer_stock_totalAmount__gt = trust_stock_totalAmount, change_extent__gte = change_extent, st_volume__gte = st_volume,  trust_buysell_shareCapital_ratio__gte = trust_shareCapital_ratio, foreign_buysell_shareCapital_ratio__gte = foreign_shareCapital_ratio, dealer_buysell_shareCapital_ratio__lte = dealer_shareCapital_ratio)\
+                                                               .order_by("dealer_buysell_shareCapital_ratio")                                                                    
+   
+
+    return render_to_response('dealer_sell_shareCapital_ratio.html', locals())

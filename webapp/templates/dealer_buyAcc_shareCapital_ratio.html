@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-Hang-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+  {% load static %}
+  <script src="{% static "webapp/all.js" %}"></script>
+  <script src="{% static "webapp/jquery-2.2.3.min.js" %}"></script>
+  
+
+
+  <title>任我行</title>
+<body onload="ShowTime()">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light mb-2" style="background-color: #e3f2fd;">
+      <a class="navbar-brand" href="#">任我行</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">介紹</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              籌碼買賣超
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/foreign_buy_shareCapital_ratio">外資買超比</a>
+              <a class="dropdown-item" href="/trust_buy_shareCapital_ratio">投信買超比</a>
+              <a class="dropdown-item" href="/dealer_buy_shareCapital_ratio">自營商買超比</a>
+              <a class="dropdown-item" href="/foreign_sell_shareCapital_ratio">外資賣超比</a>
+              <a class="dropdown-item" href="/trust_sell_shareCapital_ratio">投信賣超比</a>
+              <a class="dropdown-item" href="/dealer_sell_shareCapital_ratio">自營商賣超比</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              籌碼累計買賣超
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/foreign_buyAcc_shareCapital_ratio">外資累計買超比</a>
+              <a class="dropdown-item" href="/trust_buyAcc_shareCapital_ratio">投信累計買超比</a>
+              <a class="dropdown-item" href="/dealer_buyAcc_shareCapital_ratio">自營商累計買超比</a>
+          </li>
+          <li class=" nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  權證篩選
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">權證篩選</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 ">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    <p class="h3 col text-center">自營商累計買超比篩選條件</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <form action="../dealer_buyAcc_shareCapital_ratio/" method="post" id="result" name="result">
+            <div>
+              <div class="form-group row">
+                <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
+                <div class="col-lg-5">
+                  <input type="date" class="form-control" id="start_date" name="start_date" min="2019-11-28">
+                  <spar>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelSm" class="col-lg-4 col-form-label">篩選股價：</label>
+                <div class="col-lg-5">
+                  <input type="text" class="form-control text-right" id="stock_price" name="stock_price" value="30"
+                    required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelSm" class="col-lg-4 col-form-label">漲跌幅(小於)：</label>
+                <div class="col-lg-5">
+                  <input type="text" class="form-control text-right" id="change_extent" name="change_extent" value="3"
+                    required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabel" class="col-lg-4 col-form-label">自本比(1日大於)：</label>
+                <div class="col-lg-5">
+                  <input type="text" class="form-control text-right" id="dealer_ratio_day1" name="dealer_ratio_day1"
+                    value="0.1" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(3日大於)：</label>
+                <div class="col-lg-5">
+                  <input type="text" class="form-control text-right" id="dealer_ratio_day3" name="dealer_ratio_day3"
+                    value="0" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(5日大於)：</label>
+                <div class="col-lg-5">
+                  <input type="text" class="form-control text-right" id="dealer_ratio_day5" name="dealer_ratio_day5"
+                    value="0" required>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group row">
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(10日大於)：</label>
+            <div class="col-lg-5">
+              <input type="text" class="form-control text-right" id="dealer_ratio_day10" name="dealer_ratio_day10"
+                value="0" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(1日大於)：</label>
+            <div class="col-lg-5">
+              <input type="text" class="form-control text-right" id="dealer_turnover_day1" name="dealer_turnover_day1"
+                value="0" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(3日大於)：</label>
+            <div class="col-lg-5">
+              <input type="text" class="form-control text-right" id="dealer_turnover_day3" name="dealer_turnover_day3"
+                value="0" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(5日大於)：</label>
+            <div class="col-lg-5">
+              <input type="text" class="form-control text-right" id="dealer_turnover_day5" name="dealer_turnover_day5"
+                value="0" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(10日大於)：</label>
+            <div class="col-lg-5">
+              <input type="text" class="form-control text-right" id="dealer_turnover_day10"
+                name="dealer_turnover_day10" value="0" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-9 text-right">
+              <button type="submit" class="btn btn-success mb-6">查詢</a></button>
+            </div>
+          </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm">
+        <h3 class="text-center">自營商累計買超比篩選結果</h3>
+        <span id="stard_date">篩選日期：{{dealerDay_result.0.0 | date:'Y-m-d' }}</span>
+        <table class = "table table-striped table-responsive-md">
+          <thead>
+            <tr class="table-warning">
+              <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">股號</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">股名</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">收盤</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">漲跌幅(%)</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">資本額</th>
+              <th scope="col" class="text-center align-middle" style="width:80px;">產業別</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">自本比1日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">自本比3日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">自本比5日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">自本比10日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">周轉率1日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">周轉率3日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">周轉率5日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">周轉率10日</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for n in dealerDay_result %}
+            <tr >
+              <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
+              <td class="text-center align-middle" id = "db_data">{{n.1}}</td>
+              <td class="text-center align-middle" id = "db_data">{{n.2}}</td>
+              <td class="text-center align-middle" name = "db_data">{{n.3}}</td>
+              <td class="text-center align-middle" name = "db_data">{{n.28}}</td>
+              <td class="text-center align-middle" name = "db_data">{{n.11}}</td>
+              <td class="text-center align-middle" name = "db_data">{{n.15}}</td>
+              <td class="text-center align-middle">{{n.27 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.30 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.33 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.36 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.38 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.31 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.34 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.37 | floatformat:2}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div><br>
+  </div>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="{% static "webapp/test.js" %}"></script> 
+</body>
+
+</html>

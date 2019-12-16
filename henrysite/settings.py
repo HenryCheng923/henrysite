@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'henrysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #資料庫引擎
@@ -97,7 +97,7 @@ DATABASES = {
         'PORT':'3306', #資料庫端口，MySql默認3306
     }
 }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -136,4 +136,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/' #設定/static/路徑，就會抓取到自己設定的webapp底下的static，執行靜態檔案
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #上傳herokuo使用
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static') #上傳herokuo使用

@@ -59,10 +59,16 @@ urlpatterns = [
     #call_warrant.html
     path('call_warrant/',views.call_warrant),
 
+    #外資、投信、自營買賣超比
     path('foreign_buy_shareCapital_ratio/', views.foreign_buy_shareCapital_ratio),
     path('foreign_sell_shareCapital_ratio/', views.foreign_sell_shareCapital_ratio),
     path('trust_buy_shareCapital_ratio/', views.trust_buy_shareCapital_ratio),
     path('trust_sell_shareCapital_ratio/', views.trust_sell_shareCapital_ratio),
     path('dealer_buy_shareCapital_ratio/', views.dealer_buy_shareCapital_ratio),
     path('dealer_sell_shareCapital_ratio/', views.dealer_sell_shareCapital_ratio),
+
+    #資、投信、自營累計買賣超比
+    path('foreign_buyAcc_shareCapital_ratio/', views.foreign_buyAcc_shareCapital_ratio),
+    path('trust_buyAcc_shareCapital_ratio/', views.trust_buyAcc_shareCapital_ratio),
+    path('dealer_buyAcc_shareCapital_ratio/', views.dealer_buyAcc_shareCapital_ratio),
 ]

@@ -918,3 +918,83 @@ def dealer_sellAcc_shareCapital_ratio(request):
     dealerDay_result = cursor.fetchall()  #如果有取出第一筆資料
 
     return render_to_response('dealer_sellAcc_shareCapital_ratio.html', locals())
+
+
+#認購權證比資料頁面
+def call_warrant_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        change_extent = request.POST.get('change_extent')
+        call_warrant_shareCapital_ratio = request.POST.get('call_warrant_shareCapital_ratio')
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+            
+        stock_price = 30
+        change_extent = 3
+        call_warrant_shareCapital_ratio = 0.5
+
+    dealerDay = \
+    "select *, convert(st_sum/A.issued_number,decimal(15,3)) as call_warrant_radio \
+    from stockdatabase.wespai_p49048 A join ( select B.st_date,B.st_stockno,  B.st_stockname, B.st_close, (sum(st_amount_call_warrant)/B.st_close) as st_sum \
+    from stockdatabase.call_warrant as B \
+	where B.st_date = '%s' \
+    group by B.st_stockname \
+    ) B  on A.st_stockno = B.st_stockno \
+    where A.st_date = '%s' \
+    having st_stockprice >= '%s' and change_extent <= '%s' and call_warrant_radio  > '%s' order by call_warrant_radio desc " \
+    % (start_date, start_date, stock_price, change_extent, call_warrant_shareCapital_ratio)
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(dealerDay)  #執行查詢的SQL
+    call_warrantDay_result = cursor.fetchall()  #如果有取出第一筆資料
+    return render_to_response('warrant/call_warrant_shareCapital_ratio.html', locals())
+
+
+#認售權證比資料頁面
+def put_warrant_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        change_extent = request.POST.get('change_extent')
+        put_warrant_shareCapital_ratio = request.POST.get('put_warrant_shareCapital_ratio')
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+            
+        stock_price = 30
+        change_extent = 3
+        put_warrant_shareCapital_ratio = 0.1
+
+    dealerDay = \
+    "select *, convert(st_sum/A.issued_number,decimal(15,3)) as put_warrant_radio \
+    from stockdatabase.wespai_p49048 A join ( select B.st_date,B.st_stockno,  B.st_stockname, B.st_close, (sum(st_amount_put_warrant)/B.st_close) as st_sum \
+    from stockdatabase.put_warrant as B \
+	where B.st_date = '%s' \
+    group by B.st_stockname \
+    ) B  on A.st_stockno = B.st_stockno \
+    where A.st_date = '%s' \
+    having st_stockprice >= '%s' and change_extent <= '%s' and put_warrant_radio > '%s' order by put_warrant_radio desc " \
+    % (start_date, start_date, stock_price, change_extent, put_warrant_shareCapital_ratio)
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(dealerDay)  #執行查詢的SQL
+    put_warrantDay_result = cursor.fetchall()  #如果有取出第一筆資料
+    return render_to_response('warrant/put_warrant_shareCapital_ratio.html', locals())

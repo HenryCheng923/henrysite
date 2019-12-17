@@ -74,4 +74,8 @@ urlpatterns = [
     path('foreign_sellAcc_shareCapital_ratio/', views.foreign_sellAcc_shareCapital_ratio),
     path('trust_sellAcc_shareCapital_ratio/', views.trust_sellAcc_shareCapital_ratio),
     path('dealer_sellAcc_shareCapital_ratio/', views.dealer_sellAcc_shareCapital_ratio),
+
+    #認購、認售權證比
+    path('warrant/call_warrant_shareCapital_ratio/', views.call_warrant_shareCapital_ratio),
+    path('warrant/put_warrant_shareCapital_ratio/', views.put_warrant_shareCapital_ratio),
 ]

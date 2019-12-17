@@ -81,9 +81,9 @@
         <div class="col-3"></div>
 
         <div class="col-8">
-          <form action="../trust_buy_shareCapital_ratio/" method="post" id="result" name = "result">
+          <form action="../call_warrant_shareCapital_ratio/" method="post" id="result" name = "result">
             <div>
-              <p class="h3 col-md-8 text-center">投信買超比篩選條件</p>
+              <p class="h3 col-md-8 text-center">認購權證比篩選條件</p>
               <div class="form-group row">
                 <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
                 <div class="col-lg-4">
@@ -91,27 +91,11 @@
                   <spar>
                 </div>
               </div>
-              <!--
-              <div class="form-group row">
-                <label for="colFormLabelSm" class="col-lg-4 col-form-label">終止日期：</label>
-                <div class="col-lg-4">
-                  <input type="date" class="form-control" id="finish_date" name="finish_date"" min=" 2019-11-28">
-                  <spar>
-                </div>
-              </div>
-              -->
               <div class="form-group row">
                 <label for="colFormLabelSm" class="col-lg-4 col-form-label">篩選股價：</label>
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="stock_price" name="stock_price"
                      value="30" required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabel" class="col-lg-4 col-form-label">投信庫存總金額：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="trust_stock_totalAmount"
-                    name="trust_stock_totalAmount"  value="5000000" required>
                 </div>
               </div>
               <div class="form-group row">
@@ -122,24 +106,10 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">當日成交量：</label>
+                <label for="colFormLabel" class="col-lg-4 col-form-label">權本比(大於)：</label>
                 <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="st_volume" name="st_volume" 
-                    value="1000" required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投信買超股本比：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="trust_shareCapital_ratio"
-                    name="trust_shareCapital_ratio"  value="0.1" required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">外資買超股本比：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="foreign_shareCapital_ratio"
-                    name="foreign_shareCapital_ratio"  value="0" required>
+                  <input type="text" class="form-control text-right" id="call_warrant_shareCapital_ratio"
+                    name="call_warrant_shareCapital_ratio"  value="0.5" required>
                 </div>
               </div>
               <div class="form-group row">
@@ -154,9 +124,10 @@
         <div class="col-1"></div>
       </div>
     </div>
-    <p class="h3 col text-center">投信買超比篩選結果</p>
     <div class="row">
       <div class="col-sm">
+         <h3 class="text-center">認購權證比篩選結果</h3>
+         <span id="stard_date">篩選日期：{{call_warrantDay_result.0.0 | date:'Y-m-d' }}</span>
         <table class="table table-striped table-responsive-md">
           <thead>
             <tr class="table-warning">
@@ -168,27 +139,27 @@
               <th scope="col" class="text-center align-middle" style="width:110px;">產業類型</th>
               <th scope="col" class="text-center align-middle" style="width:80px;">漲跌幅(%)</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">股價</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">外資持股</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">投信持股</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">外資比</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">投信比</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">權本比</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">外本比</th>
+              <th scope="col" class="text-center align-middle" style="width:70px;">投本比</th>
+              <th scope="col" class="text-center align-middle" style="width:70px;">自本比</th>
             </tr>
           </thead>
           <tbody>
-          {% for n in get_db_trust_shareCapital_ratio %}
+          {% for n in call_warrantDay_result %}
             <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
-              <td class="text-center align-middle">{{ n.st_date | date:'Y-m-d'}}</td>
-              <td class="text-center align-middle">{{ n.st_stockno}}</td>
-              <td class="text-center align-middle">{{ n.st_stockname}}</td>
-              <td class="text-center align-middle">{{ n.amount_of_capital}}</td>
-              <td class="text-center align-middle">{{ n.industry_type}}</td>
-              <td class="text-center align-middle">{{ n.change_extent}}</td>
-              <td class="text-center align-middle">{{ n.st_stockprice}}</td>
-              <td class="text-center align-middle">{{ n.foreign_shareholding}}</td>
-              <td class="text-center align-middle">{{ n.trust_shareholding}}</td>
-              <td class="text-center align-middle">{{ n.foreign_buysell_shareCapital_ratio}}</td>
-              <td class="text-center align-middle">{{ n.trust_buysell_shareCapital_ratio}}</td>
+              <td class="text-center align-middle">{{ n.0 | date:'Y-m-d'}}</td>
+              <td class="text-center align-middle">{{ n.1}}</td>
+              <td class="text-center align-middle">{{ n.2}}</td>
+              <td class="text-center align-middle">{{ n.7}}</td>
+              <td class="text-center align-middle">{{ n.15}}</td>
+              <td class="text-center align-middle">{{ n.28}}</td>
+              <td class="text-center align-middle">{{ n.3}}</td>
+              <td class="text-center align-middle">{{ n.34 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{ n.23 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{ n.19 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{ n.27 | floatformat:2 }}</td>
             </tr>
           {% endfor %}
           </tbody>

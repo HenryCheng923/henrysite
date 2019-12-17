@@ -71,4 +71,7 @@ urlpatterns = [
     path('foreign_buyAcc_shareCapital_ratio/', views.foreign_buyAcc_shareCapital_ratio),
     path('trust_buyAcc_shareCapital_ratio/', views.trust_buyAcc_shareCapital_ratio),
     path('dealer_buyAcc_shareCapital_ratio/', views.dealer_buyAcc_shareCapital_ratio),
+    path('foreign_sellAcc_shareCapital_ratio/', views.foreign_sellAcc_shareCapital_ratio),
+    path('trust_sellAcc_shareCapital_ratio/', views.trust_sellAcc_shareCapital_ratio),
+    path('dealer_sellAcc_shareCapital_ratio/', views.dealer_sellAcc_shareCapital_ratio),
 ]

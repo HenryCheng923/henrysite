@@ -717,3 +717,204 @@ def dealer_buyAcc_shareCapital_ratio(request):
     dealerDay_result = cursor.fetchall()  #如果有取出第一筆資料
 
     return render_to_response('dealer_buyAcc_shareCapital_ratio.html', locals())
+
+
+#外資比賣超累計資料頁面
+def foreign_sellAcc_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        change_extent = request.POST.get('change_extent')
+        foreign_ratio_day1 = request.POST.get('foreign_ratio_day1')
+        foreign_ratio_day3 = request.POST.get('foreign_ratio_day3')
+        foreign_ratio_day5 = request.POST.get('foreign_ratio_day5')
+        foreign_ratio_day10 = request.POST.get('foreign_ratio_day10')
+        foreign_turnover_day1 = request.POST.get('foreign_turnover_day1')
+        foreign_turnover_day3 = request.POST.get('foreign_turnover_day3')
+        foreign_turnover_day5 = request.POST.get('foreign_turnover_day5')
+        foreign_turnover_day10 = request.POST.get('foreign_turnover_day10')
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+
+        stock_price = 30
+        change_extent = -3
+        foreign_ratio_day1 = -0.1
+        foreign_ratio_day3 = 0
+        foreign_ratio_day5 = 0
+        foreign_ratio_day10 = 0
+        foreign_turnover_day1 = 0
+        foreign_turnover_day3 = 0
+        foreign_turnover_day5 = 0
+        foreign_turnover_day10 = 0
+
+    
+    foreignDay = \
+    "select *, convert(st_volume/issued_number,decimal(15,2)) as turnover1 \
+    from stockdatabase.wespai_p49048 A join ( select B.st_stockno, sum(foreign_buysell_shareCapital_ratio) as sum_foreign3, convert((sum(st_volume)/issued_number)/3,decimal(15,2)) as turnover3 \
+    from stockdatabase.wespai_p49048 B \
+    where b.st_date between DATE_SUB('%s',INTERVAL 2 DAY) and  '%s'  \
+    group by B.st_stockno \
+    ) B join ( \
+    select c.st_stockno, sum(foreign_buysell_shareCapital_ratio) as sum_foreign5, convert((sum(st_volume)/issued_number)/5,decimal(15,2)) as turnover5 \
+    from stockdatabase.wespai_p49048 c \
+    where c.st_date between DATE_SUB('%s',INTERVAL 4 DAY) and  '%s'  \
+    group by c.st_stockno \
+    ) C join ( \
+    select d.st_stockno, sum(foreign_buysell_shareCapital_ratio) as sum_foreign10, convert((sum(st_volume)/issued_number)/10,decimal(15,2)) as turnover10 \
+    from stockdatabase.wespai_p49048 d \
+    where d.st_date between DATE_SUB('%s',INTERVAL 9 DAY) and  '%s'  \
+    group by d.st_stockno \
+    ) D on A.st_stockno = B.st_stockno and A.st_stockno = C.st_stockno and A.st_stockno = D.st_stockno \
+    where A.st_date = '%s' \
+    having st_stockprice > '%s' and change_extent >= '%s' and foreign_buysell_shareCapital_ratio < '%s' and sum_foreign3 < '%s' and sum_foreign5 < '%s' and sum_foreign10 < '%s' and turnover1 > '%s' and  turnover3 > '%s' and turnover5 > '%s' and turnover10 > '%s' order by turnover1 desc" \
+    % (start_date,start_date,start_date,start_date,start_date,start_date,start_date,stock_price,change_extent ,foreign_ratio_day1 ,foreign_ratio_day3,foreign_ratio_day5,foreign_ratio_day10,foreign_turnover_day1,foreign_turnover_day3,foreign_turnover_day5,foreign_turnover_day10)
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(foreignDay)  #執行查詢的SQL
+    foreignDay_result = cursor.fetchall()  #如果有取出第一筆資料
+
+    return render_to_response('foreign_sellAcc_shareCapital_ratio.html', locals())
+
+#投信比賣超累計資料頁面
+def trust_sellAcc_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        change_extent = request.POST.get('change_extent')
+        trust_ratio_day1 = request.POST.get('trust_ratio_day1')
+        trust_ratio_day3 = request.POST.get('trust_ratio_day3')
+        trust_ratio_day5 = request.POST.get('trust_ratio_day5')
+        trust_ratio_day10 = request.POST.get('trust_ratio_day10')
+        trust_turnover_day1 = request.POST.get('trust_turnover_day1')
+        trust_turnover_day3 = request.POST.get('trust_turnover_day3')
+        trust_turnover_day5 = request.POST.get('trust_turnover_day5')
+        trust_turnover_day10 = request.POST.get('trust_turnover_day10')
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+
+        stock_price = 30
+        change_extent = -3
+        trust_ratio_day1 = -0.1
+        trust_ratio_day3 = 0
+        trust_ratio_day5 = 0
+        trust_ratio_day10 = 0
+        trust_turnover_day1 = 0
+        trust_turnover_day3 = 0
+        trust_turnover_day5 = 0
+        trust_turnover_day10 = 0
+
+    
+    trustDay = \
+    "select *, convert(st_volume/issued_number,decimal(15,2)) as turnover1 \
+    from stockdatabase.wespai_p49048 A join ( select B.st_stockno, sum(trust_buysell_shareCapital_ratio) as sum_trust3, convert((sum(st_volume)/issued_number)/3,decimal(15,2)) as turnover3 \
+    from stockdatabase.wespai_p49048 B \
+    where b.st_date between DATE_SUB('%s',INTERVAL 2 DAY) and  '%s'  \
+    group by B.st_stockno \
+    ) B join ( \
+    select c.st_stockno, sum(trust_buysell_shareCapital_ratio) as sum_trust5, convert((sum(st_volume)/issued_number)/5,decimal(15,2)) as turnover5 \
+    from stockdatabase.wespai_p49048 c \
+    where c.st_date between DATE_SUB('%s',INTERVAL 4 DAY) and  '%s'  \
+    group by c.st_stockno \
+    ) C join ( \
+    select d.st_stockno, sum(trust_buysell_shareCapital_ratio) as sum_trust10, convert((sum(st_volume)/issued_number)/10,decimal(15,2)) as turnover10 \
+    from stockdatabase.wespai_p49048 d \
+    where d.st_date between DATE_SUB('%s',INTERVAL 9 DAY) and  '%s'  \
+    group by d.st_stockno \
+    ) D on A.st_stockno = B.st_stockno and A.st_stockno = C.st_stockno and A.st_stockno = D.st_stockno \
+    where A.st_date = '%s' \
+    having st_stockprice > '%s' and change_extent >= '%s' and trust_buysell_shareCapital_ratio <'%s' and sum_trust3 < '%s' and sum_trust5 < '%s' and sum_trust10 < '%s' and turnover1 > '%s' and  turnover3 > '%s' and turnover5 > '%s' and turnover10 > '%s' order by turnover1 desc" \
+    % (start_date,start_date,start_date,start_date,start_date,start_date,start_date,stock_price, change_extent, trust_ratio_day1 ,trust_ratio_day3,trust_ratio_day5,trust_ratio_day10,trust_turnover_day1,trust_turnover_day3,trust_turnover_day5,trust_turnover_day10)
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(trustDay)  #執行查詢的SQL
+    trustDay_result = cursor.fetchall()  #如果有取出第一筆資料
+
+    return render_to_response('trust_sellAcc_shareCapital_ratio.html', locals())
+
+
+
+#自營比賣超累計資料頁面
+def dealer_sellAcc_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        change_extent = request.POST.get('change_extent')
+        dealer_ratio_day1 = request.POST.get('dealer_ratio_day1')
+        dealer_ratio_day3 = request.POST.get('dealer_ratio_day3')
+        dealer_ratio_day5 = request.POST.get('dealer_ratio_day5')
+        dealer_ratio_day10 = request.POST.get('dealer_ratio_day10')
+        dealer_turnover_day1 = request.POST.get('dealer_turnover_day1')
+        dealer_turnover_day3 = request.POST.get('dealer_turnover_day3')
+        dealer_turnover_day5 = request.POST.get('dealer_turnover_day5')
+        dealer_turnover_day10 = request.POST.get('dealer_turnover_day10')
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+
+        stock_price = 30
+        change_extent = -3
+        dealer_ratio_day1 = -0.1
+        dealer_ratio_day3 = 0
+        dealer_ratio_day5 = 0
+        dealer_ratio_day10 = 0
+        dealer_turnover_day1 = 0
+        dealer_turnover_day3 = 0
+        dealer_turnover_day5 = 0
+        dealer_turnover_day10 = 0
+
+    
+    dealerDay = \
+    "select *, convert(st_volume/issued_number,decimal(15,2)) as turnover1 \
+    from stockdatabase.wespai_p49048 A join ( select B.st_stockno, sum(dealer_buysell_shareCapital_ratio) as sum_dealer3, convert((sum(st_volume)/issued_number)/3,decimal(15,2)) as turnover3 \
+    from stockdatabase.wespai_p49048 B \
+    where b.st_date between DATE_SUB('%s',INTERVAL 2 DAY) and  '%s'  \
+    group by B.st_stockno \
+    ) B join ( \
+    select c.st_stockno, sum(dealer_buysell_shareCapital_ratio) as sum_dealer5, convert((sum(st_volume)/issued_number)/5,decimal(15,2)) as turnover5 \
+    from stockdatabase.wespai_p49048 c \
+    where c.st_date between DATE_SUB('%s',INTERVAL 4 DAY) and  '%s'  \
+    group by c.st_stockno \
+    ) C join ( \
+    select d.st_stockno, sum(dealer_buysell_shareCapital_ratio) as sum_dealer10, convert((sum(st_volume)/issued_number)/10,decimal(15,2)) as turnover10 \
+    from stockdatabase.wespai_p49048 d \
+    where d.st_date between DATE_SUB('%s',INTERVAL 9 DAY) and  '%s'  \
+    group by d.st_stockno \
+    ) D on A.st_stockno = B.st_stockno and A.st_stockno = C.st_stockno and A.st_stockno = D.st_stockno \
+    where A.st_date = '%s' \
+    having st_stockprice > '%s' and change_extent >= '%s' and dealer_buysell_shareCapital_ratio <'%s' and sum_dealer3 < '%s' and sum_dealer5 < '%s' and sum_dealer10 < '%s' and turnover1 > '%s' and  turnover3 > '%s' and turnover5 > '%s' and turnover10 > '%s' order by turnover1 desc" \
+    % (start_date,start_date,start_date,start_date,start_date,start_date,start_date,stock_price, change_extent, dealer_ratio_day1 ,dealer_ratio_day3,dealer_ratio_day5,dealer_ratio_day10,dealer_turnover_day1,dealer_turnover_day3,dealer_turnover_day5,dealer_turnover_day10)
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(dealerDay)  #執行查詢的SQL
+    dealerDay_result = cursor.fetchall()  #如果有取出第一筆資料
+
+    return render_to_response('dealer_sellAcc_shareCapital_ratio.html', locals())

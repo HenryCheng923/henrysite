@@ -76,11 +76,11 @@
         </form>
       </div>
     </nav>
-    <p class="h3 col text-center">自營商累計買超比篩選條件</p>
+    <p class="h3 col text-center">投信累計賣超比篩選條件</p>
     <div class="container">
       <div class="row">
         <div class="col-6">
-          <form action="../dealer_buyAcc_shareCapital_ratio/" method="post" id="result" name="result">
+          <form action="../trust_sellAcc_shareCapital_ratio/" method="post" id="result" name="result">
             <div>
               <div class="form-group row">
                 <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
@@ -97,30 +97,30 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelSm" class="col-lg-4 col-form-label">漲跌幅(小於)：</label>
+                <label for="colFormLabelSm" class="col-lg-4 col-form-label">漲跌幅(大於)：</label>
                 <div class="col-lg-5">
-                  <input type="text" class="form-control text-right" id="change_extent" name="change_extent" value="3"
+                  <input type="text" class="form-control text-right" id="change_extent" name="change_extent" value="-3"
                     required>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabel" class="col-lg-4 col-form-label">自本比(1日大於)：</label>
+                <label for="colFormLabel" class="col-lg-4 col-form-label">投本比(1日小於)：</label>
                 <div class="col-lg-5">
-                  <input type="text" class="form-control text-right" id="dealer_ratio_day1" name="dealer_ratio_day1"
-                    value="0.1" required>
+                  <input type="text" class="form-control text-right" id="trust_ratio_day1" name="trust_ratio_day1"
+                    value="-0.1" required>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(3日大於)：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投本比(3日小於)：</label>
                 <div class="col-lg-5">
-                  <input type="text" class="form-control text-right" id="dealer_ratio_day3" name="dealer_ratio_day3"
+                  <input type="text" class="form-control text-right" id="trust_ratio_day3" name="trust_ratio_day3"
                     value="0" required>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(5日大於)：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投本比(5日小於)：</label>
                 <div class="col-lg-5">
-                  <input type="text" class="form-control text-right" id="dealer_ratio_day5" name="dealer_ratio_day5"
+                  <input type="text" class="form-control text-right" id="trust_ratio_day5" name="trust_ratio_day5"
                     value="0" required>
                 </div>
               </div>
@@ -129,38 +129,38 @@
 
         <div class="col-6">
           <div class="form-group row">
-            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自本比(10日大於)：</label>
+            <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投本比(10日小於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="dealer_ratio_day10" name="dealer_ratio_day10"
+              <input type="text" class="form-control text-right" id="trust_ratio_day10" name="trust_ratio_day10"
                 value="0" required>
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(1日大於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="dealer_turnover_day1" name="dealer_turnover_day1"
+              <input type="text" class="form-control text-right" id="trust_turnover_day1" name="trust_turnover_day1"
                 value="0" required>
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(3日大於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="dealer_turnover_day3" name="dealer_turnover_day3"
+              <input type="text" class="form-control text-right" id="trust_turnover_day3" name="trust_turnover_day3"
                 value="0" required>
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(5日大於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="dealer_turnover_day5" name="dealer_turnover_day5"
+              <input type="text" class="form-control text-right" id="trust_turnover_day5" name="trust_turnover_day5"
                 value="0" required>
             </div>
           </div>
           <div class="form-group row">
             <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(10日大於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="dealer_turnover_day10"
-                name="dealer_turnover_day10" value="0" required>
+              <input type="text" class="form-control text-right" id="trust_turnover_day10"
+                name="trust_turnover_day10" value="0" required>
             </div>
           </div>
           <div class="form-group row">
@@ -177,11 +177,11 @@
 
     <div class="row">
       <div class="col-sm">
-        <h3 class="text-center">自營商累計買超比篩選結果</h3>
-        <span id="stard_date">篩選日期：{{dealerDay_result.0.0 | date:'Y-m-d' }}</span>
+        <h3 class="text-center">投信累計賣超比篩選結果</h3>
+        <span id="stard_date">篩選日期：{{trustDay_result.0.0 | date:'Y-m-d' }}</span>
         <table class = "table table-striped table-responsive-md">
           <thead>
-            <tr class="table-warning">
+            <tr class="table-success">
               <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">股號</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">股名</th>
@@ -189,10 +189,10 @@
               <th scope="col" class="text-center align-middle" style="width:60px;">漲跌幅(%)</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">資本額</th>
               <th scope="col" class="text-center align-middle" style="width:80px;">產業別</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">自本比1日</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">自本比3日</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">自本比5日</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">自本比10日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">投本比1日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">投本比3日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">投本比5日</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">投本比10日</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">周轉率1日</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">周轉率3日</th>
               <th scope="col" class="text-center align-middle" style="width:60px;">周轉率5日</th>
@@ -200,7 +200,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for n in dealerDay_result %}
+            {% for n in trustDay_result %}
             <tr >
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
               <td class="text-center align-middle" id = "db_data">{{n.1}}</td>
@@ -209,7 +209,7 @@
               <td class="text-center align-middle" name = "db_data">{{n.28}}</td>
               <td class="text-center align-middle" name = "db_data">{{n.11}}</td>
               <td class="text-center align-middle" name = "db_data">{{n.15}}</td>
-              <td class="text-center align-middle">{{n.27 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{n.19 | floatformat:2 }}</td>
               <td class="text-center align-middle">{{n.30 | floatformat:2 }}</td>
               <td class="text-center align-middle">{{n.33 | floatformat:2 }}</td>
               <td class="text-center align-middle">{{n.36 | floatformat:2 }}</td>

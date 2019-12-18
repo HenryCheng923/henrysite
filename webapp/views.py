@@ -998,3 +998,34 @@ def put_warrant_shareCapital_ratio(request):
     cursor.execute(dealerDay)  #執行查詢的SQL
     put_warrantDay_result = cursor.fetchall()  #如果有取出第一筆資料
     return render_to_response('warrant/put_warrant_shareCapital_ratio.html', locals())
+
+
+#任我行籌碼分析表
+def chip_analysis(request):
+    '''
+    connect_mysql()
+    getdb_st_date = "select st_date from stockdatabase.wespai_p49048 where st_stockno = 1101 order by st_date desc"
+    cursor2 = connect.cursor()
+    cursor2.execute(getdb_st_date)  #執行查詢的SQL
+    getdb_st_date = cursor2.fetchone()  #如果有取出第一筆資料
+    getdb_st_date_result = getdb_st_date[0].strftime('%Y%m%d')
+    '''
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+
+    
+    chip_analysis = \
+    "select * \
+    from stockdatabase.three_legal as A join ( \
+	select * \
+    from stockdatabase.credit_transaction as B \
+    ) B join ( \
+	select * \
+    from stockdatabase.market_transaction_information as C \
+    ) C on A.st_date = B.st_date and A.st_date = C.st_date order by A.st_date desc limit 0,30" \
+    
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(chip_analysis)  #執行查詢的SQL
+    chip_analysis_result = cursor.fetchall()  #如果有取出第一筆資料
+    return render_to_response('chip_analysis.html', locals())

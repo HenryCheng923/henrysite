@@ -11,10 +11,11 @@
   {% load static %}
   <script src="{% static "webapp/all.js" %}"></script>
   <script src="{% static "webapp/jquery-2.2.3.min.js" %}"></script>
-  
+
 
 
   <title>任我行</title>
+
 <body onload="ShowTime()">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light mb-2" style="background-color: #e3f2fd;">
@@ -62,13 +63,16 @@
               <a class="dropdown-item" href="/dealer_sellAcc_shareCapital_ratio">自營商累計賣超比</a>
           </li>
           <li class=" nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  權證篩選
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="/warrant/call_warrant_shareCapital_ratio/">認購權證篩選</a>
-                 <a class="dropdown-item" href="/warrant/put_warrant_shareCapital_ratio">認售權證篩選</a>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              權證篩選
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/warrant/call_warrant_shareCapital_ratio/">認購權證篩選</a>
+              <a class="dropdown-item" href="/warrant/put_warrant_shareCapital_ratio">認售權證篩選</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/chip_analysis">現貨籌碼表</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0 ">
@@ -160,8 +164,8 @@
           <div class="form-group row">
             <label for="colFormLabelLg" class="col-lg-4 col-form-label ">周轉率(10日大於)：</label>
             <div class="col-lg-5">
-              <input type="text" class="form-control text-right" id="trust_turnover_day10"
-                name="trust_turnover_day10" value="0" required>
+              <input type="text" class="form-control text-right" id="trust_turnover_day10" name="trust_turnover_day10"
+                value="0" required>
             </div>
           </div>
           <div class="form-group row">
@@ -180,7 +184,7 @@
       <div class="col-sm">
         <h3 class="text-center">投信累計賣超比篩選結果</h3>
         <span id="stard_date">篩選日期：{{trustDay_result.0.0 | date:'Y-m-d' }}</span>
-        <table class = "table table-striped table-responsive-md">
+        <table class="table table-striped table-responsive-md">
           <thead>
             <tr class="table-success">
               <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
@@ -202,14 +206,14 @@
           </thead>
           <tbody>
             {% for n in trustDay_result %}
-            <tr >
+            <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
-              <td class="text-center align-middle" id = "db_data">{{n.1}}</td>
-              <td class="text-center align-middle" id = "db_data">{{n.2}}</td>
-              <td class="text-center align-middle" name = "db_data">{{n.3}}</td>
-              <td class="text-center align-middle" name = "db_data">{{n.28}}</td>
-              <td class="text-center align-middle" name = "db_data">{{n.11}}</td>
-              <td class="text-center align-middle" name = "db_data">{{n.15}}</td>
+              <td class="text-center align-middle" id="db_data">{{n.1}}</td>
+              <td class="text-center align-middle" id="db_data">{{n.2}}</td>
+              <td class="text-center align-middle" name="db_data">{{n.3}}</td>
+              <td class="text-center align-middle" name="db_data">{{n.28}}</td>
+              <td class="text-center align-middle" name="db_data">{{n.11}}</td>
+              <td class="text-center align-middle" name="db_data">{{n.15}}</td>
               <td class="text-center align-middle">{{n.19 | floatformat:2 }}</td>
               <td class="text-center align-middle">{{n.30 | floatformat:2 }}</td>
               <td class="text-center align-middle">{{n.33 | floatformat:2 }}</td>
@@ -238,7 +242,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <script src="{% static "webapp/test.js" %}"></script> 
+  <script src="{% static "webapp/test.js" %}"></script>
 </body>
 
 </html>

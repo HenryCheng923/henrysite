@@ -78,4 +78,7 @@ urlpatterns = [
     #認購、認售權證比
     path('warrant/call_warrant_shareCapital_ratio/', views.call_warrant_shareCapital_ratio),
     path('warrant/put_warrant_shareCapital_ratio/', views.put_warrant_shareCapital_ratio),
+
+    #任我行籌碼分析表
+    path('chip_analysis/', views.chip_analysis),
 ]

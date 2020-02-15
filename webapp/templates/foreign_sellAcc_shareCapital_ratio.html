@@ -39,6 +39,8 @@
               籌碼買賣超
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/three_buy_shareCapital_ratio">三大買超比</a>
+              <a class="dropdown-item" href="/three_sell_shareCapital_ratio">三大賣超比</a>
               <a class="dropdown-item" href="/foreign_buy_shareCapital_ratio">外資買超比</a>
               <a class="dropdown-item" href="/foreign_sell_shareCapital_ratio">外資賣超比</a>
               <a class="dropdown-item" href="/trust_buy_shareCapital_ratio">投信買超比</a>
@@ -74,6 +76,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/chip_analysis">現貨籌碼表</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/futures_chips">期貨籌碼表</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0 ">
@@ -209,7 +214,7 @@
             {% for n in foreignDay_result %}
             <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
-              <td class="text-center align-middle" id="db_data">{{n.1}}</td>
+              <td class="text-center align-middle"><a target =_blank href="http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_{{n.1}}.djhtm">{{n.1}}</a></td>
               <td class="text-center align-middle" id="db_data">{{n.2}}</td>
               <td class="text-center align-middle" name="db_data">{{n.3}}</td>
               <td class="text-center align-middle" name="db_data">{{n.28}}</td>

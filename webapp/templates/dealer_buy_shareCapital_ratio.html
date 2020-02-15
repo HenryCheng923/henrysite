@@ -36,6 +36,8 @@
               籌碼買賣超
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/three_buy_shareCapital_ratio">三大買超比</a>
+              <a class="dropdown-item" href="/three_sell_shareCapital_ratio">三大賣超比</a>
               <a class="dropdown-item" href="/foreign_buy_shareCapital_ratio">外資買超比</a>
               <a class="dropdown-item" href="/foreign_sell_shareCapital_ratio">外資賣超比</a>
               <a class="dropdown-item" href="/trust_buy_shareCapital_ratio">投信買超比</a>
@@ -70,6 +72,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/chip_analysis">現貨籌碼表</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/futures_chips">期貨籌碼表</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0 ">
@@ -190,7 +195,7 @@
             <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
               <td class="text-center align-middle">{{ n.st_date | date:'Y-m-d'}}</td>
-              <td class="text-center align-middle">{{ n.st_stockno}}</td>
+              <td class="text-center align-middle"><a target =_blank href="http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_{{ n.st_stockno}}.djhtm">{{ n.st_stockno}}</a></td>
               <td class="text-center align-middle">{{ n.st_stockname}}</td>
               <td class="text-center align-middle">{{ n.amount_of_capital}}</td>
               <td class="text-center align-middle">{{ n.industry_type}}</td>

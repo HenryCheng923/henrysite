@@ -19,15 +19,13 @@ from django.db.models import Q
 from django.db.models.functions import Cast
 from django.db.models import FloatField
 
+import pandas
 import time
 import json
 import datetime
 
 import pymysql
-MYSQL_HOST = 'localhost'
-MYSQL_DB = 'stockdatabase'
-MYSQL_USER = 'root'
-MYSQL_PASS = 'b123456'
+
 insert_total = 0
 
 today = datetime.datetime.today()
@@ -167,10 +165,15 @@ def do_search(request):
     #stocknovalue = request.GET.get('st_stockno')
     #stocknovalue = request.GET['st_stockno']
 
-
-def connect_mysql():  #連線資料庫
+def connect_mysql():  #連線資料庫 stockdatabase
     global connect, cursor
-    connect = pymysql.connect(host = MYSQL_HOST, db = MYSQL_DB, user = MYSQL_USER, password = MYSQL_PASS,
+    connect = pymysql.connect(host = 'localhost', db = 'stockdatabase', user = 'root', password = 'b123456',
+            charset = 'utf8', use_unicode = True)
+    cursor = connect.cursor()
+
+def connect_mysql_futuredatabase():  #連線資料庫 futuredatabase
+    global connect, cursor
+    connect = pymysql.connect(host = 'localhost', db = 'futuredatabase', user = 'root', password = 'b123456',
             charset = 'utf8', use_unicode = True)
     cursor = connect.cursor()
 
@@ -1029,3 +1032,205 @@ def chip_analysis(request):
     cursor.execute(chip_analysis)  #執行查詢的SQL
     chip_analysis_result = cursor.fetchall()  #如果有取出第一筆資料
     return render_to_response('chip_analysis.html', locals())
+
+#三大法人買超比資料頁面
+def three_buy_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        amount_of_capital = request.POST.get('amount_of_capital')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+        dealer_shareCapital_ratio = request.POST.get('dealer_shareCapital_ratio')
+        three_shareCapital_ratio = request.POST.get('three_shareCapital_ratio')
+        
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+            
+        
+        stock_price = 30
+        amount_of_capital = 100
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = 0
+        dealer_shareCapital_ratio = 0
+        three_shareCapital_ratio = 0
+
+    trustDay = \
+    "select st_date, st_stockno, st_stockname, st_stockprice, amount_of_capital, industry_type, convert(foreign_buysell/st_volume,decimal(15,2)) as foreign_volume, convert(trust_buysell/st_volume,decimal(15,2)) as trust_volume	,convert(dealer_buysell/st_volume,decimal(15,2)) as dealer_volume, convert(st_three_buysell/st_volume,decimal(15,2)) as st_three_volume, st_volume \
+    from stockdatabase.wespai_p49048 \
+    where st_date between '%s' and  '%s'  and amount_of_capital < '%s' and st_volume >'%s' \
+    having foreign_volume > '%s'  and trust_volume > '%s' and dealer_volume > '%s' and st_three_volume > '%s' \
+    order by st_three_volume desc" \
+    %(start_date,start_date,amount_of_capital,st_volume,trust_shareCapital_ratio,foreign_shareCapital_ratio,dealer_shareCapital_ratio,three_shareCapital_ratio)
+
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(trustDay)  #執行查詢的SQL
+    trustDay_result = cursor.fetchall()  #如果有取出第一筆資料
+
+    return render_to_response('three_buy_shareCapital_ratio.html', locals())
+
+
+#三大法人賣超比資料頁面
+def three_sell_shareCapital_ratio(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+    if request.POST:
+        start_date = request.POST.get('start_date')
+        date_time = datetime.datetime.strptime(start_date,'%Y-%m-%d')
+        start_date = date_time.strftime('%Y%m%d')
+
+        stock_price = request.POST.get('stock_price')
+        amount_of_capital = request.POST.get('amount_of_capital')
+        st_volume = request.POST.get('st_volume')
+        trust_shareCapital_ratio = request.POST.get('trust_shareCapital_ratio')
+        foreign_shareCapital_ratio = request.POST.get('foreign_shareCapital_ratio')
+        dealer_shareCapital_ratio = request.POST.get('dealer_shareCapital_ratio')
+        three_shareCapital_ratio = request.POST.get('three_shareCapital_ratio')
+        
+    else:
+        if getdb_st_date_result == date:
+            start_date = date
+        else:
+            start_date = getdb_st_date_result
+            
+        
+        stock_price = 30
+        amount_of_capital = 100
+        st_volume = 1000
+        trust_shareCapital_ratio = 0
+        foreign_shareCapital_ratio = 0
+        dealer_shareCapital_ratio = 0
+        three_shareCapital_ratio = 0
+
+    trustDay = \
+    "select st_date, st_stockno, st_stockname, st_stockprice, amount_of_capital, industry_type, convert(foreign_buysell/st_volume,decimal(15,2)) as foreign_volume, convert(trust_buysell/st_volume,decimal(15,2)) as trust_volume	,convert(dealer_buysell/st_volume,decimal(15,2)) as dealer_volume, convert(st_three_buysell/st_volume,decimal(15,2)) as st_three_volume, st_volume \
+    from stockdatabase.wespai_p49048 \
+    where st_date between '%s' and  '%s'  and amount_of_capital < '%s' and st_volume >'%s' \
+    having foreign_volume < '%s'  and trust_volume < '%s' and dealer_volume < '%s' and st_three_volume < '%s' \
+    order by st_three_volume" \
+    %(start_date,start_date,amount_of_capital,st_volume,trust_shareCapital_ratio,foreign_shareCapital_ratio,dealer_shareCapital_ratio,three_shareCapital_ratio)
+
+
+    connect_mysql()
+    cursor = connect.cursor()
+    cursor.execute(trustDay)  #執行查詢的SQL
+    trustDay_result = cursor.fetchall()  #如果有取出第一筆資料
+
+    return render_to_response('three_sell_shareCapital_ratio.html', locals())
+
+
+#任我行籌碼分析表
+def futures_chips(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+    
+    chip_analysis = \
+    "select st_date, s_close, s_updown,s_updown_radio,s_callput_diff,s_callput_amount_radio,s_BS_amount_radio,retail_BS_ratio,top_B_five_traders_diff,top_B_five_specificlegal_diff,top_B_ten_traders_diff,top_B_ten_specificlegal_diff \
+    from futuredatabase.futures_three_legal \
+    order by st_date desc limit 0,30" \
+    
+    connect_mysql_futuredatabase()
+    cursor = connect.cursor()
+    cursor.execute(chip_analysis)  #執行查詢的SQL
+    chip_analysis_result = cursor.fetchall()  #如果有取出第一筆資料
+    return render_to_response('futures_chips.html', locals())
+
+
+#任我行籌碼分析表
+def internationIndex(request):
+    getdb_st_date_result = Gt.getdata()
+    date = today.strftime("%Y%m%d")
+
+    dfs = pandas.read_html("https://histock.tw/%E5%9C%8B%E9%9A%9B%E8%82%A1%E5%B8%82")
+    item0  = dfs[0] #費城半導體~俄羅斯
+    item1  = dfs[1] #小日經~以太幣
+    item2  = dfs[2] #日本日經~台S&P500
+    item3  = dfs[3] #臺道瓊~加拿大
+    item4  = dfs[4] #小德國~奈及利亞
+    item5  = dfs[5] #深證100指數~巴基斯坦
+    item6  = dfs[6] #奧地利~瑞士
+    item7  = dfs[7] #澳大利亞~美國
+    item8  = dfs[8] #孟加拉~越南
+    item9  = dfs[9] #台積電ADR~和信GIGA
+    item10  = dfs[10] #高股息~中型100
+    item11  = dfs[11] #台指期~摩台指
+    item12  = dfs[12] #比特幣~NEO
+    item13  = dfs[13] #乾散裝~超輕便
+    item14  = dfs[14] #汽油~天燃氣
+    item15  = dfs[15] #泰德價差~VIX
+    item16  = dfs[16] #歐元兌美元~加幣
+    item17  = dfs[17] #人民幣~馬來幣
+    item18  = dfs[18] #AC世界指數~台灣指數
+    item19  = dfs[19] #肉牛~11號糖
+    item20  = dfs[20] #白金~鋅
+
+    #亞太區追蹤
+    AsiaIndex =  [
+            [item2.iloc[0,0],item2.iloc[0,1],item2.iloc[0,2],item2.iloc[0,3],item3.iloc[0,4]], #日本日經
+            [item2.iloc[2,0],item2.iloc[2,1],item2.iloc[2,2],item2.iloc[2,3],item2.iloc[2,4]], #香港恆生
+            [item2.iloc[3,0],item2.iloc[3,1],item2.iloc[3,2],item2.iloc[3,3],item2.iloc[3,4]], #南韓綜合
+            [item2.iloc[4,0],item2.iloc[4,1],item2.iloc[4,2],item2.iloc[4,3],item2.iloc[4,4]], #上海綜合
+            [item2.iloc[7,0],item2.iloc[7,1],item2.iloc[7,2],item2.iloc[7,3],item2.iloc[7,4]], #A50期貨
+            [item5.iloc[6,0],item5.iloc[6,1],item5.iloc[6,2],item5.iloc[6,3],item5.iloc[6,4]]  #印度指數
+    ]
+
+    #重要產業追蹤           
+    ImportantIndustrayIndex = [
+            [item9.iloc[0,0],item9.iloc[0,1],item9.iloc[0,2],item9.iloc[0,3]], #台積電ADR
+            [item3.iloc[16,0],item3.iloc[16,1],item3.iloc[16,2],item3.iloc[16,3]], #GOOGLE
+            [item3.iloc[17,0],item3.iloc[17,1],item3.iloc[17,2],item3.iloc[17,3]],  #蘋果
+            [item3.iloc[20,0],item3.iloc[20,1],item3.iloc[20,2],item3.iloc[20,3]],  #Facebook
+            [item3.iloc[18,0],item3.iloc[18,1],item3.iloc[18,2],item3.iloc[18,3]], #微軟
+            [item3.iloc[6,0],item3.iloc[6,1],item3.iloc[6,2],item3.iloc[6,3]], #阿里巴巴
+            [item3.iloc[8,0],item3.iloc[8,1],item3.iloc[8,2],item3.iloc[8,3]], #NBI生技
+
+    ]
+
+
+    #重要指標追蹤
+    ImportantIndicatorsIndex = [
+            [item0.iloc[1,0],item0.iloc[1,1],item0.iloc[1,2],item0.iloc[1,3]], #美元指數
+            [item12.iloc[0,0],item12.iloc[0,1],item12.iloc[0,2],item12.iloc[0,3]], #比特幣
+            [item12.iloc[1,0],item12.iloc[1,1],item12.iloc[1,2],item12.iloc[1,3]],  #乙太幣
+            [item13.iloc[0,0],item13.iloc[0,1],item13.iloc[0,2],item13.iloc[0,3]],  #乾散裝型
+            [item14.iloc[3,0],item14.iloc[3,1],item14.iloc[3,2],item14.iloc[3,3]],  #輕原油
+            [item15.iloc[1,0],item15.iloc[1,1],item15.iloc[1,2],item15.iloc[1,3]],  #VIX
+            [item16.iloc[4,0],item16.iloc[4,1],item16.iloc[4,2],item16.iloc[4,3]],  #黃金期
+            [item16.iloc[5,0],item16.iloc[5,1],item16.iloc[5,2],item16.iloc[5,3]]   #黃金NT
+
+    ]
+
+    #匯率追蹤
+    ExchangeRateIndex = [
+            [item16.iloc[0,0],item16.iloc[0,1],item16.iloc[0,2],item16.iloc[0,3]], #歐元兌美元
+            [item16.iloc[1,0],item16.iloc[1,1],item16.iloc[1,2],item16.iloc[1,3]],  #美元兌日圓
+            [item16.iloc[3,0],item16.iloc[3,1],item16.iloc[3,2],item16.iloc[3,3]],  #美元兌人民幣
+            [item17.iloc[0,0],item17.iloc[0,1],item17.iloc[0,2],item17.iloc[0,3],item17.iloc[0,4]],  #人民幣
+            [item17.iloc[1,0],item17.iloc[1,1],item17.iloc[1,2],item17.iloc[1,3],item17.iloc[1,4]],  #日幣
+            [item17.iloc[3,0],item17.iloc[3,1],item17.iloc[3,2],item17.iloc[3,3],item17.iloc[3,4]],  #美金
+            [item17.iloc[5,0],item17.iloc[5,1],item17.iloc[5,2],item17.iloc[5,3],item17.iloc[5,4]]   #歐元 
+    ]
+
+    #歐美區追蹤
+    EuropeAmericaIndex = [
+            [item0.iloc[4,0],item0.iloc[4,1],item0.iloc[4,2],item0.iloc[4,3]],      #道瓊指數
+            [item0.iloc[0,0],item0.iloc[0,1],item0.iloc[0,2],item0.iloc[0,3]],      #費城半導體     
+            [item0.iloc[2,0],item0.iloc[2,1],item0.iloc[2,2],item0.iloc[2,3]],      #NASDAQ
+            [item0.iloc[3,0],item0.iloc[3,1],item0.iloc[3,2],item0.iloc[3,3]],      #S&P500
+            [item0.iloc[5,0],item0.iloc[5,1],item0.iloc[5,2],item0.iloc[5,3]],      #英國指數
+            [item0.iloc[6,0],item0.iloc[6,1],item0.iloc[6,2],item0.iloc[6,3]],      #德國指數
+            [item0.iloc[10,0],item0.iloc[10,1],item0.iloc[10,2],item0.iloc[10,3]]   #俄羅斯指數
+    ]
+    return render_to_response('internationIndex.html', locals())

@@ -9,11 +9,11 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
   {% load static %}
-  <script src="{% static "webapp/all.js" %}"></script>
+  <script src="{% static "webapp/jquery-2.2.3.min.js" %}"></script>
+    
   <title>任我行</title>
-</head>
 
-<body onload="ShowTime()">
+<body>
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light mb-2" style="background-color: #e3f2fd;">
       <a class="navbar-brand" href="#">任我行</a>
@@ -36,8 +36,6 @@
               籌碼買賣超
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/three_buy_shareCapital_ratio">三大買超比</a>
-              <a class="dropdown-item" href="/three_sell_shareCapital_ratio">三大賣超比</a>
               <a class="dropdown-item" href="/foreign_buy_shareCapital_ratio">外資買超比</a>
               <a class="dropdown-item" href="/foreign_sell_shareCapital_ratio">外資賣超比</a>
               <a class="dropdown-item" href="/trust_buy_shareCapital_ratio">投信買超比</a>
@@ -61,7 +59,7 @@
               <a class="dropdown-item" href="/trust_sellAcc_shareCapital_ratio">投信累計賣超比</a>
               <a class="dropdown-item" href="/dealer_sellAcc_shareCapital_ratio">自營商累計賣超比</a>
           </li>
-          <li class="nav-item dropdown">
+          <li class=" nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               權證篩選
@@ -82,95 +80,52 @@
           <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
         </form>
       </div>
-    </nav>
-
+    </nav><br>
+    <h2 class="text-center">任我行期貨籌碼表</h2><br>
+    <h5>
+      ★ PC-Power：大於15億(偏多)；小於15億(偏空)；介於+-15億(正常)<br>
+      ★ P/C Ratio：大於110(偏多)；小於90(偏空)；介於90~110(正常)<br>
+      ★ 買賣權成交比：以賣方角度觀察，越大指數會跌，越小指數會漲 <a class="text-danger">"確認數值應該多少為空或多"</a><br>
+      ★ 散戶多空比：正值表示散戶看多(偏空)；負值表示散戶看空(偏多)<br>
+      ★ 前五十大特法：數值為正(偏多)；數值為負(偏空)<br>
+    </h5><br>
     <div class="container">
       <div class="row">
-        <div class="col-3"></div>
-
-        <div class="col-8">
-          <form action="../call_warrant_shareCapital_ratio/" method="post" id="result" name="result">
-            <div>
-              <p class="h3 col-md-8 text-center">認購權證比篩選條件</p>
-              <div class="form-group row">
-                <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
-                <div class="col-lg-4">
-                  <input type="date" class="form-control" id="start_date" name="start_date" min="2019-11-28">
-                  <spar>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabelSm" class="col-lg-4 col-form-label">篩選股價：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="stock_price" name="stock_price" value="30"
-                    required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">漲跌幅(小於)：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="change_extent" name="change_extent" value="3"
-                    required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabel" class="col-lg-4 col-form-label">權本比(大於)：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="call_warrant_shareCapital_ratio"
-                    name="call_warrant_shareCapital_ratio" value="0.5" required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-lg-8 text-right">
-                  <button type="submit" class="btn btn-success mb-6">查詢</a></button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <div class="col-1"></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm">
-        <h3 class="text-center">認購權證比篩選結果</h3>
-        <span id="stard_date">篩選日期：{{call_warrantDay_result.0.0 | date:'Y-m-d' }}</span>
         <table class="table table-striped table-responsive-md">
           <thead>
-            <tr class="table-warning">
-              <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
-              <th scope="col" class="text-center align-middle" style="width:120px;">日期</th>
-              <th scope="col" class="text-center align-middle" style="width:100px;">股票代碼</th>
-              <th scope="col" class="text-center align-middle" style="width:110px;">公司名稱</th>
-              <th scope="col" class="text-center align-middle" style="width:80px;">資本額</th>
-              <th scope="col" class="text-center align-middle" style="width:110px;">產業類型</th>
-              <th scope="col" class="text-center align-middle" style="width:80px;">漲跌幅(%)</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">股價</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">權本比</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">外本比</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">投本比</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">自本比</th>
+            <tr class="table-danger">
+              <th scope="col" class="text-center align-middle" >日期</th>
+              <th scope="col" class="text-center align-middle">臺指收盤</th>
+              <th scope="col" class="text-center align-middle">漲跌指數</th>
+              <th scope="col" class="text-center align-middle">漲跌(%)</th>
+              <th scope="col" class="text-center align-middle">PC-Power(億)</th>
+              <th scope="col" class="text-center align-middle">P/C Ratio</th>
+              <th scope="col" class="text-center align-middle">買賣權成交比</th>
+              <th scope="col" class="text-center align-middle">散戶多空比</th>
+              <th scope="col" class="text-center align-middle">前五交易人多空比</th>
+              <th scope="col" class="text-center align-middle">前五大特法多空比</th>
+              <th scope="col" class="text-center align-middle">前十交易人多空比</th>
+              <th scope="col" class="text-center align-middle">前十大特法多空比</th>
             </tr>
           </thead>
           <tbody>
-            {% for n in call_warrantDay_result %}
+            {% for n in chip_analysis_result %}
             <tr>
-              <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
-              <td class="text-center align-middle">{{ n.0 | date:'Y-m-d'}}</td>
-              <td class="text-center align-middle"><a target =_blank href="http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_{{ n.1}}.djhtm">{{ n.1}}</a></td>
-              <td class="text-center align-middle">{{ n.2}}</td>
-              <td class="text-center align-middle">{{ n.7}}</td>
-              <td class="text-center align-middle">{{ n.15}}</td>
-              <td class="text-center align-middle">{{ n.28}}</td>
-              <td class="text-center align-middle">{{ n.3}}</td>
-              <td class="text-center align-middle">{{ n.34 | floatformat:2 }}</td>
-              <td class="text-center align-middle">{{ n.23 | floatformat:2 }}</td>
-              <td class="text-center align-middle">{{ n.19 | floatformat:2 }}</td>
-              <td class="text-center align-middle">{{ n.27 | floatformat:2 }}</td>
+              <td class="text-center align-middle">{{ n.0 | date:'Y-m-d' }}</td>
+              <td class="text-center align-middle">{{ n.1 }}</td>
+              <td class="text-center align-middle">{{ n.2 }}</td>
+              <td class="text-center align-middle">{{ n.3 }}</td>
+              <td class="text-center align-middle">{{ n.4 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.5 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.6 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.7 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.8 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.9 | floatformat:2}}</td>
+              <td class="text-center align-middle">{{ n.10| floatformat:2 }}</td>
+              <td class="text-center align-middle">{{ n.11| floatformat:2 }}</td>
             </tr>
             {% endfor %}
-          </tbody>
+          </tbody >
         </table>
       </div>
     </div><br>
@@ -188,6 +143,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+
+  <!--<script src="{% static "webapp/bcd.js" %}"></script>-->
 </body>
 
 </html>

@@ -11,5 +11,3 @@ function ShowTime() {
     //finishDate.value = today;
     stock_price.value = 30;
   }
-
-

@@ -10,6 +10,7 @@
   <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
   {% load static %}
   <script src="{% static "webapp/all.js" %}"></script>
+
   <title>任我行</title>
 </head>
 
@@ -89,9 +90,9 @@
         <div class="col-3"></div>
 
         <div class="col-8">
-          <form action="../foreign_sell_shareCapital_ratio/" method="post" id="result" name="result">
+          <form action="../three_buy_shareCapital_ratio/" method="post" id="result" name="result">
             <div>
-              <p class="h3 col-md-8 text-center">外資賣超比篩選條件</p>
+              <p class="h3 col-md-8 text-center">三大買超比篩選條件</p>
               <div class="form-group row">
                 <label for="colFormLabelSm" class="col-lg-4 col-form-label">起始日期：</label>
                 <div class="col-lg-4">
@@ -116,39 +117,47 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabel" class="col-lg-4 col-form-label">外資庫存總金額：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">資本額(小於)億：</label>
                 <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="foreign_stock_totalAmount"
-                    name="foreign_stock_totalAmount" value="5000000" required>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">漲跌幅(大於)：</label>
-                <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="change_extent" name="change_extent" value="-3"
+                  <input type="text" class="form-control text-right" id="amount_of_capital" name="amount_of_capital" value="100"
                     required>
-                </div>
+              </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">當日成交量：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">當日成交量(大於)：</label>
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="st_volume" name="st_volume" value="1000"
                     required>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投信賣超股本比：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">外資買超股本比：</label>
+                <div class="col-lg-4">
+                  <input type="text" class="form-control text-right" id="foreign_shareCapital_ratio"
+                    name="foreign_shareCapital_ratio" value="0" required>
+              </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">投信買超股本比：</label>
                 <div class="col-lg-4">
                   <input type="text" class="form-control text-right" id="trust_shareCapital_ratio"
                     name="trust_shareCapital_ratio" value="0" required>
                 </div>
               </div>
+
               <div class="form-group row">
-                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">外資賣超股本比：</label>
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">自營買超股本比：</label>
                 <div class="col-lg-4">
-                  <input type="text" class="form-control text-right" id="foreign_shareCapital_ratio"
-                    name="foreign_shareCapital_ratio" value="-0.2" required>
+                  <input type="text" class="form-control text-right" id="dealer_shareCapital_ratio"
+                    name="dealer_shareCapital_ratio" value="0" required>
                 </div>
+              </div>
+              <div class="form-group row">
+                <label for="colFormLabelLg" class="col-lg-4 col-form-label ">三大買超股本比：</label>
+                <div class="col-lg-4">
+                  <input type="text" class="form-control text-right" id="three_shareCapital_ratio"
+                    name="three_shareCapital_ratio" value="0" required>
+              </div>
               </div>
               <div class="form-group row">
                 <div class="col-lg-8 text-right">
@@ -162,41 +171,41 @@
         <div class="col-1"></div>
       </div>
     </div>
-    <p class="h3 col text-center">外資賣超比篩選結果</p>
+    <p class="h3 col text-center">三大買超比篩選結果</p>
     <div class="row">
       <div class="col-sm">
         <table class="table table-striped table-responsive-md">
           <thead>
-            <tr class="table-success">
+            <tr class="table-warning">
               <th scope="col" class="text-center align-middle" style="width:5px;">#</th>
               <th scope="col" class="text-center align-middle" style="width:120px;">日期</th>
               <th scope="col" class="text-center align-middle" style="width:100px;">股票代碼</th>
               <th scope="col" class="text-center align-middle" style="width:110px;">公司名稱</th>
-              <th scope="col" class="text-center align-middle" style="width:80px;">資本額</th>
+              <th scope="col" class="text-center align-middle" style="width:110px;">股價</th>
               <th scope="col" class="text-center align-middle" style="width:110px;">產業類型</th>
-              <th scope="col" class="text-center align-middle" style="width:80px;">漲跌幅(%)</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">股價</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">外資持股</th>
-              <th scope="col" class="text-center align-middle" style="width:60px;">投信持股</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">外資比</th>
-              <th scope="col" class="text-center align-middle" style="width:70px;">投信比</th>
+              <th scope="col" class="text-center align-middle" style="width:80px;">資本額</th>
+              <th scope="col" class="text-center align-middle" style="width:80px;">外資比</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">投信比</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">自營比</th>
+              <th scope="col" class="text-center align-middle" style="width:60px;">三大比</th>
+              <th scope="col" class="text-center align-middle" style="width:70px;">成交量</th>
             </tr>
           </thead>
           <tbody>
-            {% for n in get_db_foreign_buysell_shareCapital_ratio %}
+            {% for n in trustDay_result %}
             <tr>
               <td scope="row" class="text-center align-middle ">{{ forloop.counter }}</td>
-              <td class="text-center align-middle">{{ n.st_date | date:'Y-m-d'}}</td>
-              <td class="text-center align-middle"><a target =_blank href="http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_{{ n.st_stockno}}.djhtm">{{ n.st_stockno}}</a></td>
-              <td class="text-center align-middle">{{ n.st_stockname}}</td>
-              <td class="text-center align-middle">{{ n.amount_of_capital}}</td>
-              <td class="text-center align-middle">{{ n.industry_type}}</td>
-              <td class="text-center align-middle">{{ n.change_extent}}</td>
-              <td class="text-center align-middle">{{ n.st_stockprice}}</td>
-              <td class="text-center align-middle">{{ n.foreign_shareholding}}</td>
-              <td class="text-center align-middle">{{ n.trust_shareholding}}</td>
-              <td class="text-center align-middle">{{ n.foreign_buysell_shareCapital_ratio}}</td>
-              <td class="text-center align-middle">{{ n.trust_buysell_shareCapital_ratio}}</td>
+              <td class="text-center align-middle">{{ n.0 | date:'Y-m-d' }}</td>
+              <td class="text-center align-middle"><a target =_blank href="http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_{{ n.1}}.djhtm">{{ n.1}}</a></td>
+              <td class="text-center align-middle">{{ n.2}}</td>
+              <td class="text-center align-middle">{{ n.3}}</td>
+              <td class="text-center align-middle">{{ n.5}}</td>
+              <td class="text-center align-middle">{{ n.4}}</td>
+              <td class="text-center align-middle">{{ n.6}}</td>
+              <td class="text-center align-middle">{{ n.7}}</td>
+              <td class="text-center align-middle">{{ n.8}}</td>
+              <td class="text-center align-middle">{{ n.9}}</td>
+              <td class="text-center align-middle">{{ n.10}}</td>
             </tr>
             {% endfor %}
           </tbody>

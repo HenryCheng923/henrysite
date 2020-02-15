@@ -81,4 +81,14 @@ urlpatterns = [
 
     #任我行籌碼分析表
     path('chip_analysis/', views.chip_analysis),
+
+    #三大買超比
+    path('three_buy_shareCapital_ratio/', views.three_buy_shareCapital_ratio),
+    path('three_sell_shareCapital_ratio/', views.three_sell_shareCapital_ratio),
+
+    #期貨籌碼
+    path('futures_chips/', views.futures_chips),
+
+    #國際指數(重要指數
+    path('internationIndex/', views.internationIndex),
 ]

@@ -9,12 +9,11 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
   {% load static %}
-  <script src="{% static "webapp/all.js" %}"></script>
   <script src="{% static "webapp/jquery-2.2.3.min.js" %}"></script>
-
+    
   <title>任我行</title>
 
-<bod">
+<body>
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light mb-2" style="background-color: #e3f2fd;">
       <a class="navbar-brand" href="#">任我行</a>
@@ -72,6 +71,9 @@
           <li class="nav-item">
             <a class="nav-link" href="/chip_analysis">現貨籌碼表</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/futures_chips">期貨籌碼表</a>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0 ">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -106,8 +108,8 @@
             <tr>
               <td class="text-center align-middle">{{ n.0 | date:'Y-m-d' }}</td>
               <td class="text-center align-middle">{{ n.37 }}</td>
-              <td class="text-center align-middle">{{ n.38 }}</td>
-              <td class="text-center align-middle">{{ n.32 }}</td>
+              <td id = "num" name = "num" class="text-center align-middle">{{ n.38 }}</td>
+              <td id = "bbb" name = "bbb" class="text-center align-middle">{{ n.32 }}</td>
               <td class="text-center align-middle">{{ n.39 }}</td>
               <td class="text-center align-middle">{{ n.18 }}</td>
               <td class="text-center align-middle">{{ n.19 }}</td>
@@ -120,14 +122,11 @@
               <td class="text-center align-middle">{{ n.47 }}</td>
             </tr>
             {% endfor %}
-          </tbody>
+          </tbody >
         </table>
       </div>
     </div><br>
   </div>
-
-
-
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -138,7 +137,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <script src="{% static "webapp/test.js" %}"></script>
+
+  <!--<script src="{% static "webapp/bcd.js" %}"></script>-->
 </body>
 
 </html>
